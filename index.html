@@ -3,214 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Hub de Rotina</title>
-    <!-- Tailwind CSS (Play CDN correto) -->
+    <title>Meu Hub de Rotina Definitivo</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animação do Círculo de Respiração */
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.85); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+        .breathe-animation {
+            animation: breathe 8s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-slate-900">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-12 selection:bg-cyan-500 selection:text-slate-900">
 
     <div class="flex flex-col items-center p-4 sm:p-6 w-full max-w-md mx-auto">
         
-        <!-- HEADER -->
-        <header class="w-full flex justify-between items-center py-6 mb-4">
+        <!-- HEADER COM GAMIFICAÇÃO -->
+        <header class="w-full flex justify-between items-center py-4 mb-2 border-b border-slate-900">
             <div>
-                <h1 class="text-2xl font-black text-emerald-400 tracking-tight">Meu Hub de Rotina</h1>
-                <p class="text-xs text-slate-400 mt-1">Design focado em organização e clareza mental.</p>
+                <h1 class="text-xl font-black text-emerald-400 tracking-tight flex items-center gap-2">
+                    Meu Hub de Rotina
+                    <span id="streak-tag" class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded-full font-bold">🔥 0 dias</span>
+                </h1>
+                <p id="frase-dia" class="text-[11px] text-slate-400 italic mt-0.5">"A clareza precede a maestria."</p>
             </div>
-            <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center text-lg shadow-inner">
-                🧠
+            <div class="text-right">
+                <span id="user-level" class="text-xs font-black text-cyan-400 uppercase tracking-wider block">Nível 1</span>
+                <span id="user-xp" class="text-[10px] text-slate-500 font-bold">0 / 100 XP</span>
             </div>
         </header>
 
+        <!-- SEÇÃO: DIÁRIO DE HUMOR & RESPIRAÇÃO GUIA -->
+        <section class="w-full bg-slate-900/40 border border-slate-800/80 rounded-2xl p-3 mb-4 flex justify-between items-center">
+            <div class="flex gap-2 text-xl" id="mood-selector">
+                <button data-mood="😃" class="hover:scale-125 transition-transform">😃</button>
+                <button data-mood="🙂" class="hover:scale-125 transition-transform">🙂</button>
+                <button data-mood="😐" class="hover:scale-125 transition-transform">😐</button>
+                <button data-mood="😔" class="hover:scale-125 transition-transform">😔</button>
+                <button data-mood="😫" class="hover:scale-125 transition-transform">😫</button>
+            </div>
+            <button id="btn-open-breathing" class="text-xs font-bold text-cyan-400 bg-cyan-950/50 border border-cyan-800 px-2.5 py-1 rounded-xl flex items-center gap-1 hover:bg-cyan-900/50 transition-colors">
+                🫁 Respirar
+            </button>
+        </section>
+
         <!-- SEÇÃO 1: HIDRATAÇÃO -->
-        <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl backdrop-blur-sm mb-6">
+        <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl mb-6">
             <div class="w-full flex justify-between items-center">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Controle de Hidratação</h2>
+                <div class="flex items-center gap-2">
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Hidratação</h2>
+                    <button id="btn-config-agua" class="text-[10px] text-cyan-500 hover:underline">⚙️ Meta</button>
+                </div>
                 <button id="btn-reset-agua" class="text-[10px] uppercase font-bold tracking-wider text-slate-500 hover:text-rose-400 transition-colors">Resetar</button>
             </div>
             
-            <!-- Botão de Clique Principal -->
-            <button id="btn-add-agua" class="w-36 h-36 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 shadow-lg shadow-cyan-500/10 active:scale-95 hover:scale-105 transition-all duration-200 group">
-                <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center transition-colors group-hover:bg-slate-900/40">
-                    <span class="text-3xl mb-1">💧</span>
-                    <span class="text-lg font-black text-white">+300ml</span>
+            <!-- Botão Principal + Progresso -->
+            <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 shadow-lg shadow-cyan-500/10 active:scale-95 transition-all">
+                <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center">
+                    <span class="text-2xl">💧</span>
+                    <span id="texto-agua-progresso" class="text-base font-black text-white">0%</span>
                 </div>
-            </button>
-
-            <!-- Barra de Progresso -->
-            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mt-2 border border-slate-700/30">
-                <div id="barra-agua" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-0 transition-all duration-500 ease-out"></div>
             </div>
-            
-            <div class="w-full flex justify-between text-xs font-medium text-slate-400">
-                <span id="texto-agua-atual">0ml ingeridos</span>
-                <span class="text-cyan-400 font-bold">Meta: 2000ml</span>
+
+            <!-- Botões de Atalho Rápido -->
+            <div class="grid grid-cols-4 gap-2 w-full">
+                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 text-cyan-300" data-ml="100">+100ml</button>
+                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 text-cyan-300" data-ml="250">+250ml</button>
+                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 text-cyan-300" data-ml="300">+300ml</button>
+                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 text-cyan-300" data-ml="500">+500ml</button>
+            </div>
+
+            <!-- Barra de Progresso + Meta -->
+            <div class="w-full">
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-1">
+                    <div id="barra-agua" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+                <div class="w-full flex justify-between text-[11px] font-medium text-slate-400">
+                    <span id="texto-agua-atual">0ml ingeridos</span>
+                    <span id="texto-agua-meta" class="text-cyan-400 font-bold">Meta: 2000ml</span>
+                </div>
+            </div>
+
+            <!-- Histórico Semanal em Minigráfico -->
+            <div class="w-full border-t border-slate-800/60 pt-3">
+                <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Últimos 7 dias</p>
+                <div id="historico-agua" class="flex justify-between items-end h-10 gap-1"></div>
             </div>
         </section>
 
-        <!-- SEÇÃO 2: COMPROMISSOS -->
+        <!-- SEÇÃO 2: REFEIÇÕES & SUPLEMENTOS -->
+        <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6">
+            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">Saúde & Nutrição</h2>
+            
+            <!-- Checklist de Refeições -->
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <label class="flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-800/80 text-xs cursor-pointer">
+                    <input type="checkbox" id="check-cafe" class="chk-saude accent-cyan-500"> Café da Manhã
+                </label>
+                <label class="flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-800/80 text-xs cursor-pointer">
+                    <input type="checkbox" id="check-almoco" class="chk-saude accent-cyan-500"> Almoço
+                </label>
+                <label class="flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-800/80 text-xs cursor-pointer">
+                    <input type="checkbox" id="check-lanche" class="chk-saude accent-cyan-500"> Lanche
+                </label>
+                <label class="flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-800/80 text-xs cursor-pointer">
+                    <input type="checkbox" id="check-jantar" class="chk-saude accent-cyan-500"> Jantar
+                </label>
+            </div>
+
+            <!-- Suplementos -->
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/50 flex justify-between items-center">
+                <span class="text-xs text-slate-300 font-medium">💊 Suplementos & Vitaminas</span>
+                <input type="checkbox" id="check-suplementos" class="chk-saude accent-emerald-500 w-4 h-4">
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: COMPROMISSOS -->
         <section class="w-full flex flex-col gap-3 mb-6">
             <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Compromissos do Dia</h2>
-            
-            <!-- Lista de Compromissos Dinâmica -->
-            <div id="lista-compromissos" class="flex flex-col gap-2.5"></div>
+            <div id="lista-compromissos" class="flex flex-col gap-2"></div>
 
-            <!-- Formulário Rápido para Criar Compromisso -->
-            <form id="form-compromisso" class="flex gap-2 mt-2 bg-slate-900 p-2 rounded-xl border border-slate-800">
-                <input 
-                    id="input-titulo"
-                    type="text" 
-                    placeholder="Novo compromisso..." 
-                    required
-                    class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"
-                />
-                <input 
-                    id="input-hora"
-                    type="time" 
-                    required
-                    class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none focus:border-cyan-500"
-                />
-                <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-lg transition-all">
-                    +
-                </button>
+            <!-- Formulário com Prioridade -->
+            <form id="form-compromisso" class="flex flex-col gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                <div class="flex gap-2">
+                    <input id="input-titulo" type="text" placeholder="Novo compromisso..." required class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"/>
+                    <input id="input-hora" type="time" required class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
+                </div>
+                <div class="flex justify-between items-center">
+                    <select id="select-prioridade" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-400">
+                        <option value="baixa">Prioridade Baixa 🟢</option>
+                        <option value="media" selected>Prioridade Média 🟡</option>
+                        <option value="alta">Prioridade Alta 🔴</option>
+                    </select>
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs px-4 py-1 rounded-lg transition-all">+ Adicionar</button>
+                </div>
             </form>
         </section>
 
-        <!-- SEÇÃO 3: RESGATE DE HOBBIES -->
+        <!-- SEÇÃO 4: HOBBIES & TIMERS -->
         <section class="w-full flex flex-col gap-3 mb-8">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Cuidando de Você (Hobbies)</h2>
+            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Hobbies & Foco</h2>
             <div class="grid grid-cols-3 gap-2">
-                <div class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 transition-colors group cursor-pointer">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">📚</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Ler um Livro</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                <div onclick="iniciarTimerHobby('Ler um Livro', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer">
+                    <span class="text-2xl">📚</span>
+                    <p class="text-[11px] font-bold text-slate-200">Ler Livro</p>
+                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
                 </div>
-                <div class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 transition-colors group cursor-pointer">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">🎨</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Desenhar</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                <div onclick="iniciarTimerHobby('Desenhar/Criar', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer">
+                    <span class="text-2xl">🎨</span>
+                    <p class="text-[11px] font-bold text-slate-200">Desenhar</p>
+                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
                 </div>
-                <div class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 transition-colors group cursor-pointer">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">🎮</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Videogame</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">20 min</span>
+                <div onclick="iniciarTimerHobby('Sessão Pomodoro', 25)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer">
+                    <span class="text-2xl">⏳</span>
+                    <p class="text-[11px] font-bold text-slate-200">Pomodoro</p>
+                    <span class="text-[9px] font-bold text-cyan-400 uppercase bg-cyan-950/50 border border-cyan-900 px-1.5 py-0.5 rounded-full">25 min</span>
                 </div>
             </div>
         </section>
 
-        <!-- MINI FOOTER INFORMATIVO -->
-        <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full">
-            Mobile-First MVP • JavaScript Puro Sem Compilação
+        <!-- RODAPÉ COM GERENCIAMENTO DE DADOS -->
+        <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full flex justify-between items-center">
+            <span>Mobile-First MVP</span>
+            <div class="flex gap-2">
+                <button id="btn-exportar" class="hover:text-slate-400">Exportar Backup</button>
+                <span>•</span>
+                <button id="btn-importar" class="hover:text-slate-400">Importar</button>
+            </div>
         </footer>
 
     </div>
 
-    <!-- LÓGICA DO APLICATIVO -->
-    <script>
-        const META_AGUA = 2000;
+    <!-- MODAL: TIMER / POMODORO -->
+    <div id="modal-timer" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
+        <h3 id="timer-titulo" class="text-xl font-bold text-slate-200 mb-2">Timer</h3>
+        <div id="timer-display" class="text-6xl font-black text-cyan-400 font-mono my-6">15:00</div>
+        <button id="btn-fechar-timer" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2 rounded-xl text-sm">Encerrar / Sair</button>
+    </div>
 
-        // --- ESTADO INICIAL ---
-        let dadosAgua = parseInt(localStorage.getItem('hub_agua_puro')) || 0;
-        let dadosCompromissos = JSON.parse(localStorage.getItem('hub_compromissos_puro')) || [
-            { id: 1, titulo: "Tomar Vitaminas", hora: "08:30", concluido: false },
-            { id: 2, titulo: "Consulta Médica", hora: "14:00", concluido: false },
-            { id: 3, titulo: "Caminhada leve", hora: "18:00", concluido: false }
+    <!-- MODAL: RESPIRAÇÃO GUIADA -->
+    <div id="modal-respiracao" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
+        <h3 class="text-lg font-bold text-slate-200 mb-8">Respiração Guiada (Box Breathing)</h3>
+        <div class="w-40 h-40 rounded-full border-4 border-cyan-400 flex items-center justify-center breathe-animation mb-8">
+            <span class="text-xs font-bold text-cyan-300 uppercase tracking-widest">Inspire / Expire</span>
+        </div>
+        <button id="btn-fechar-respiracao" class="bg-slate-800 text-slate-300 font-bold px-6 py-2 rounded-xl text-sm">Fechar</button>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT COMPLETA -->
+    <script>
+        // --- BASE DE DADOS & ESTADO ---
+        const FRASES = [
+            '"A clareza precede a maestria."',
+            '"Pequenas disciplinas diárias geram grandes conquistas."',
+            '"O foco é dizer não a centenas de boas ideias."',
+            '"Crie hábitos e seus hábitos criarão você."'
         ];
 
-        // --- SELEÇÃO DE ELEMENTOS ---
-        const btnAddAgua = document.getElementById('btn-add-agua');
-        const btnResetAgua = document.getElementById('btn-reset-agua');
-        const barraAgua = document.getElementById('barra-agua');
-        const textoAguaAtual = document.getElementById('texto-agua-atual');
-        const listaCompromissos = document.getElementById('lista-compromissos');
-        const formCompromisso = document.getElementById('form-compromisso');
-        const inputTitulo = document.getElementById('input-titulo');
-        const inputHora = document.getElementById('input-hora');
+        let appData = JSON.parse(localStorage.getItem('hub_rotina_db')) || {
+            peso: 70,
+            metaAgua: 2450,
+            aguaAtual: 0,
+            xp: 0,
+            nivel: 1,
+            streak: 0,
+            ultimaData: new Date().toLocaleDateString(),
+            historicoAgua: [1200, 1500, 2000, 1800, 2100, 1900, 0],
+            saudeChecks: { cafe: false, almoco: false, lanche: false, jantar: false, suplementos: false },
+            compromissos: [
+                { id: 1, titulo: "Tomar Vitaminas", hora: "08:30", prioridade: "alta", concluido: false },
+                { id: 2, titulo: "Caminhada ou Treino", hora: "18:00", prioridade: "media", concluido: false }
+            ]
+        };
 
-        // --- FUNÇÕES DE RENDERIZAÇÃO ---
-        function atualizarInterfaceAgua() {
-            localStorage.setItem('hub_agua_puro', dadosAgua);
-            textoAguaAtual.textContent = `${dadosAgua}ml ingeridos`;
-            const porcentagem = Math.min((dadosAgua / META_AGUA) * 100, 100);
-            barraAgua.style.width = `${porcentagem}%`;
+        // --- MANUTENÇÃO DIÁRIA (RESET À MEIA-NOITE) ---
+        function checarViradaDeDia() {
+            const hoje = new Date().toLocaleDateString();
+            if (appData.ultimaData !== hoje) {
+                // Atualizar histórico semanal
+                appData.historicoAgua.shift();
+                appData.historicoAgua.push(appData.aguaAtual);
+                
+                // Incrementar ou resetar streak
+                if (appData.aguaAtual >= appData.metaAgua) {
+                    appData.streak += 1;
+                } else {
+                    appData.streak = 0;
+                }
+
+                // Reset diário de tarefas e água
+                appData.aguaAtual = 0;
+                appData.saudeChecks = { cafe: false, almoco: false, lanche: false, jantar: false, suplementos: false };
+                appData.compromissos.forEach(c => c.concluido = false);
+                appData.ultimaData = hoje;
+                salvarDados();
+            }
         }
 
-        function deletarCompromisso(id, event) {
-            event.stopPropagation(); // Evita alternar a conclusão ao clicar para deletar
-            dadosCompromissos = dadosCompromissos.filter(comp => comp.id !== id);
-            renderizarCompromissos();
+        function salvarDados() {
+            localStorage.setItem('hub_rotina_db', JSON.stringify(appData));
+            renderizarTudo();
         }
 
-        function renderizarCompromissos() {
-            localStorage.setItem('hub_compromissos_puro', JSON.stringify(dadosCompromissos));
-            listaCompromissos.innerHTML = '';
+        function adicionarXP(quantidade) {
+            appData.xp += quantidade;
+            if (appData.xp >= 100) {
+                appData.nivel += 1;
+                appData.xp -= 100;
+            }
+            if (navigator.vibrate) navigator.vibrate(50);
+            salvarDados();
+        }
 
-            dadosCompromissos.forEach(comp => {
+        // --- RENDERIZAÇÃO DA INTERFACE ---
+        function renderizarTudo() {
+            // Header e Gamificação
+            document.getElementById('frase-dia').textContent = FRASES[new Date().getDate() % FRASES.length];
+            document.getElementById('streak-tag').textContent = `🔥 ${appData.streak} dias`;
+            document.getElementById('user-level').textContent = `Nível ${appData.nivel}`;
+            document.getElementById('user-xp').textContent = `${appData.xp} / 100 XP`;
+
+            // Hidratação
+            const porcentagem = Math.min(Math.round((appData.aguaAtual / appData.metaAgua) * 100), 100);
+            document.getElementById('texto-agua-progresso').textContent = `${porcentagem}%`;
+            document.getElementById('barra-agua').style.width = `${porcentagem}%`;
+            document.getElementById('texto-agua-atual').textContent = `${appData.aguaAtual}ml ingeridos`;
+            document.getElementById('texto-agua-meta').textContent = `Meta: ${appData.metaAgua}ml`;
+
+            // Minigráfico de Água
+            const histContainer = document.getElementById('historico-agua');
+            histContainer.innerHTML = '';
+            appData.historicoAgua.forEach((val) => {
+                const alt = Math.min((val / appData.metaAgua) * 100, 100);
+                const bar = document.createElement('div');
+                bar.className = 'w-full bg-cyan-950 rounded-t border-t border-cyan-500/30';
+                bar.style.height = `${Math.max(alt, 10)}%`;
+                histContainer.appendChild(bar);
+            });
+
+            // Saúde Checks
+            document.getElementById('check-cafe').checked = appData.saudeChecks.cafe;
+            document.getElementById('check-almoco').checked = appData.saudeChecks.almoco;
+            document.getElementById('check-lanche').checked = appData.saudeChecks.lanche;
+            document.getElementById('check-jantar').checked = appData.saudeChecks.jantar;
+            document.getElementById('check-suplementos').checked = appData.saudeChecks.suplementos;
+
+            // Compromissos
+            const lista = document.getElementById('lista-compromissos');
+            lista.innerHTML = '';
+            appData.compromissos.forEach(comp => {
                 const card = document.createElement('div');
-                card.className = `p-4 rounded-2xl flex justify-between items-center border transition-all cursor-pointer select-none ${
-                    comp.concluido 
-                    ? 'bg-slate-900/30 border-slate-900 text-slate-500 line-through' 
-                    : 'bg-slate-900 border-slate-800 text-slate-200 hover:border-slate-700'
-                }`;
+                const badgeCor = comp.prioridade === 'alta' ? 'border-rose-500/50' : comp.prioridade === 'media' ? 'border-amber-500/50' : 'border-emerald-500/50';
+                card.className = `p-3 rounded-xl flex justify-between items-center border bg-slate-900/60 ${badgeCor} ${comp.concluido ? 'opacity-40 line-through' : ''}`;
                 
                 card.innerHTML = `
-                    <div class="flex flex-col gap-1">
-                        <p class="font-semibold text-sm tracking-wide">${comp.titulo}</p>
-                        <p class="text-[11px] font-medium text-slate-400 flex items-center gap-1">⏱️ ${comp.hora}</p>
+                    <div class="flex flex-col gap-0.5 cursor-pointer flex-1" onclick="alternarCompromisso(${comp.id})">
+                        <p class="font-semibold text-xs text-slate-200">${comp.titulo}</p>
+                        <p class="text-[10px] text-slate-400">⏱️ ${comp.hora}</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button class="btn-deletar text-xs text-slate-600 hover:text-rose-400 p-1 transition-colors" title="Excluir">✕</button>
-                        <div class="w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
-                            comp.concluido ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-bold text-xs' : 'border-slate-700 bg-slate-950'
-                        }">
-                            ${comp.concluido ? '✓' : ''}
-                        </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="deletarCompromisso(${comp.id})" class="text-xs text-slate-600 hover:text-rose-400 p-1">✕</button>
+                        <input type="checkbox" ${comp.concluido ? 'checked' : ''} onclick="alternarCompromisso(${comp.id})" class="accent-cyan-500 w-4 h-4 cursor-pointer">
                     </div>
                 `;
-
-                // Evento para alternar estado de concluído
-                card.addEventListener('click', () => {
-                    comp.concluido = !comp.concluido;
-                    renderizarCompromissos();
-                });
-
-                // Evento para deletar compromisso
-                const btnDeletar = card.querySelector('.btn-deletar');
-                btnDeletar.addEventListener('click', (e) => deletarCompromisso(comp.id, e));
-
-                listaCompromissos.appendChild(card);
+                lista.appendChild(card);
             });
         }
 
-        // --- EVENTOS ---
-        btnAddAgua.addEventListener('click', () => {
-            dadosAgua = Math.min(dadosAgua + 300, META_AGUA * 2);
-            atualizarInterfaceAgua();
+        // --- AÇÕES DO APLICATIVO ---
+        // Hidratação
+        document.querySelectorAll('.btn-add-agua-val').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const ml = parseInt(e.target.getAttribute('data-ml'));
+                appData.aguaAtual += ml;
+                adicionarXP(10);
+            });
         });
 
-        btnResetAgua.addEventListener('click', () => {
-            dadosAgua = 0;
-            atualizarInterfaceAgua();
+        document.getElementById('btn-reset-agua').addEventListener('click', () => {
+            appData.aguaAtual = 0;
+            salvarDados();
         });
 
-        formCompromisso.addEventListener('submit', (e) => {
+        document.getElementById('btn-config-agua').addEventListener('click', () => {
+            const peso = prompt("Informe seu peso atual em kg para calcular a meta de água:", appData.peso);
+            if (peso && !isNaN(peso)) {
+                appData.peso = parseFloat(peso);
+                appData.metaAgua = Math.round(appData.peso * 35);
+                salvarDados();
+            }
+        });
+
+        // Saúde / Refeições
+        document.querySelectorAll('.chk-saude').forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                const key = e.target.id.replace('check-', '');
+                appData.saudeChecks[key] = e.target.checked;
+                if (e.target.checked) adicionarXP(15);
+                else salvarDados();
+            });
+        });
+
+        // Compromissos
+        document.getElementById('form-compromisso').addEventListener('submit', (e) => {
             e.preventDefault();
-            const novo = {
-                id: Date.now(),
-                titulo: inputTitulo.value.trim(),
-                hora: inputHora.value,
-                concluido: false
-            };
-            dadosCompromissos.push(novo);
-            dadosCompromissos.sort((a, b) => a.hora.localeCompare(b.hora));
-            inputTitulo.value = '';
-            inputHora.value = '';
-            renderizarCompromissos();
+            const titulo = document.getElementById('input-titulo').value;
+            const hora = document.getElementById('input-hora').value;
+            const prioridade = document.getElementById('select-prioridade').value;
+
+            appData.compromissos.push({ id: Date.now(), titulo, hora, prioridade, concluido: false });
+            appData.compromissos.sort((a, b) => a.hora.localeCompare(b.hora));
+            
+            document.getElementById('input-titulo').value = '';
+            document.getElementById('input-hora').value = '';
+            salvarDados();
+        });
+
+        function alternarCompromisso(id) {
+            const comp = appData.compromissos.find(c => c.id === id);
+            if (comp) {
+                comp.concluido = !comp.concluido;
+                if (comp.concluido) adicionarXP(20);
+                else salvarDados();
+            }
+        }
+
+        function deletarCompromisso(id) {
+            appData.compromissos = appData.compromissos.filter(c => c.id !== id);
+            salvarDados();
+        }
+
+        // --- TIMER / POMODORO MODAL ---
+        let timerInterval;
+        function iniciarTimerHobby(nome, minutos) {
+            document.getElementById('timer-titulo').textContent = nome;
+            let tempoRestante = minutos * 60;
+            const modal = document.getElementById('modal-timer');
+            const display = document.getElementById('timer-display');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const m = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
+                const s = String(tempoRestante % 60).padStart(2, '0');
+                display.textContent = `${m}:${s}`;
+                
+                if (--tempoRestante < 0) {
+                    clearInterval(timerInterval);
+                    alert(`Tempo concluído para: ${nome}!`);
+                    adicionarXP(30);
+                    modal.classList.add('hidden');
+                }
+            }, 1000);
+        }
+
+        document.getElementById('btn-fechar-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            document.getElementById('modal-timer').classList.add('hidden');
+        });
+
+        // Respiração Modal
+        document.getElementById('btn-open-breathing').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.remove('hidden');
+            document.getElementById('modal-respiracao').classList.add('flex');
+        });
+        document.getElementById('btn-fechar-respiracao').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.add('hidden');
+        });
+
+        // Mood Tracker
+        document.querySelectorAll('#mood-selector button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                alert(`Humor registrado: ${e.target.getAttribute('data-mood')}`);
+                adicionarXP(5);
+            });
+        });
+
+        // Backup / Exportar
+        document.getElementById('btn-exportar').addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hub-rotina-backup-${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        });
+
+        document.getElementById('btn-importar').addEventListener('click', () => {
+            const jsonStr = prompt("Cole o conteúdo do seu arquivo JSON de backup aqui:");
+            if (jsonStr) {
+                try {
+                    appData = JSON.parse(jsonStr);
+                    salvarDados();
+                    alert("Dados importados com sucesso!");
+                } catch(err) {
+                    alert("Erro ao ler o código JSON.");
+                }
+            }
         });
 
         // --- INICIALIZAÇÃO ---
-        atualizarInterfaceAgua();
-        renderizarCompromissos();
+        checarViradaDeDia();
+        renderizarTudo();
     </script>
 </body>
 </html>
