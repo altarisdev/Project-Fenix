@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Hub de Rotina</title>
-    <!-- Tailwind CSS para estilização rápida e moderna -->
-    <script src="https://tailwindcss.com"></script>
+    <!-- Tailwind CSS (Play CDN correto) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-slate-900">
 
@@ -135,6 +135,12 @@
             barraAgua.style.width = `${porcentagem}%`;
         }
 
+        function deletarCompromisso(id, event) {
+            event.stopPropagation(); // Evita alternar a conclusão ao clicar para deletar
+            dadosCompromissos = dadosCompromissos.filter(comp => comp.id !== id);
+            renderizarCompromissos();
+        }
+
         function renderizarCompromissos() {
             localStorage.setItem('hub_compromissos_puro', JSON.stringify(dadosCompromissos));
             listaCompromissos.innerHTML = '';
@@ -152,17 +158,25 @@
                         <p class="font-semibold text-sm tracking-wide">${comp.titulo}</p>
                         <p class="text-[11px] font-medium text-slate-400 flex items-center gap-1">⏱️ ${comp.hora}</p>
                     </div>
-                    <div class="w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
-                        comp.concluido ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-bold text-xs' : 'border-slate-700 bg-slate-950'
-                    }">
-                        ${comp.concluido ? '✓' : ''}
+                    <div class="flex items-center gap-3">
+                        <button class="btn-deletar text-xs text-slate-600 hover:text-rose-400 p-1 transition-colors" title="Excluir">✕</button>
+                        <div class="w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
+                            comp.concluido ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-bold text-xs' : 'border-slate-700 bg-slate-950'
+                        }">
+                            ${comp.concluido ? '✓' : ''}
+                        </div>
                     </div>
                 `;
 
+                // Evento para alternar estado de concluído
                 card.addEventListener('click', () => {
                     comp.concluido = !comp.concluido;
                     renderizarCompromissos();
                 });
+
+                // Evento para deletar compromisso
+                const btnDeletar = card.querySelector('.btn-deletar');
+                btnDeletar.addEventListener('click', (e) => deletarCompromisso(comp.id, e));
 
                 listaCompromissos.appendChild(card);
             });
@@ -174,30 +188,29 @@
             atualizarInterfaceAgua();
         });
 
+        btnResetAgua.addEventListener('click', () => {
+            dadosAgua = 0;
+            atualizarInterfaceAgua();
+        });
 
-btnResetAgua.addEventListener('click', () => {
-dadosAgua = 0;
-atualizarInterfaceAgua();
-});
-formCompromisso.addEventListener('submit', (e) => {
-e.preventDefault();
-const novo = {
-id: Date.now(),
-titulo: inputTitulo.value.trim(),
-hora: inputHora.value,
-concluido: false
-};
-dadosCompromissos.push(novo);
-dadosCompromissos.sort((a, b) => a.hora.localeCompare(b.hora));
-inputTitulo.value = '';
-inputHora.value = '';
-renderizarCompromissos();
-});
-// --- INICIALIZAÇÃO OBRIGATÓRIA ---
-atualizarInterfaceAgua();
-renderizarCompromissos();
+        formCompromisso.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const novo = {
+                id: Date.now(),
+                titulo: inputTitulo.value.trim(),
+                hora: inputHora.value,
+                concluido: false
+            };
+            dadosCompromissos.push(novo);
+            dadosCompromissos.sort((a, b) => a.hora.localeCompare(b.hora));
+            inputTitulo.value = '';
+            inputHora.value = '';
+            renderizarCompromissos();
+        });
 
-
-
-
-
+        // --- INICIALIZAÇÃO ---
+        atualizarInterfaceAgua();
+        renderizarCompromissos();
+    </script>
+</body>
+</html>
