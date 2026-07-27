@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Hub de Rotina Completo</title>
-    <!-- Tailwind CSS Play CDN -->
+    <title>Meu Hub de Rotina Definitivo</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para Gráficos Interativos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @keyframes breathe {
             0%, 100% { transform: scale(0.85); opacity: 0.6; }
@@ -21,20 +23,24 @@
         .accent-color { color: var(--accent-light); }
         .bg-accent { background-color: var(--accent); }
         .border-accent { border-color: var(--accent); }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
 </head>
 <body id="app-body" class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-cyan-500 selection:text-slate-900 theme-cyan">
 
     <div class="flex flex-col items-center p-4 sm:p-6 w-full max-w-md mx-auto">
         
-        <!-- HEADER COM GAMIFICAÇÃO E CITAÇÃO -->
+        <!-- HEADER COM GAMIFICAÇÃO -->
         <header class="w-full flex justify-between items-center py-4 mb-2 border-b border-slate-900">
             <div>
                 <h1 class="text-xl font-black text-emerald-400 tracking-tight flex items-center gap-2">
                     Meu Hub
                     <span id="streak-tag" class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded-full font-bold">🔥 0 dias</span>
                 </h1>
-                <p id="frase-dia" class="text-[11px] text-slate-400 italic mt-0.5 cursor-pointer hover:text-slate-200" title="Clique para trocar a frase">"A clareza precede a maestria." 🔄</p>
+                <p id="frase-dia" class="text-[11px] text-slate-400 italic mt-0.5 cursor-pointer hover:text-slate-200" title="Clique para trocar">"A clareza precede a maestria." 🔄</p>
             </div>
             <div class="text-right">
                 <span id="user-level" class="text-xs font-black accent-color uppercase tracking-wider block">Nível 1</span>
@@ -42,192 +48,217 @@
             </div>
         </header>
 
-        <!-- TEMA, HUMOR & RESPIRAÇÃO -->
+        <!-- TOOLBAR: TEMAS, HUMOR E MODO FOCO -->
         <section class="w-full bg-slate-900/40 border border-slate-800/80 rounded-2xl p-3 mb-4 flex justify-between items-center">
-            <div class="flex gap-2 text-xl" id="mood-selector">
+            <div class="flex gap-1.5 text-lg" id="mood-selector">
                 <button data-mood="😃" class="hover:scale-125 transition-transform">😃</button>
                 <button data-mood="🙂" class="hover:scale-125 transition-transform">🙂</button>
                 <button data-mood="😐" class="hover:scale-125 transition-transform">😐</button>
                 <button data-mood="😔" class="hover:scale-125 transition-transform">😔</button>
-                <button data-mood="😫" class="hover:scale-125 transition-transform">😫</button>
             </div>
             <div class="flex items-center gap-2">
-                <button id="btn-open-breathing" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/50 border border-cyan-800 px-2 py-1 rounded-xl flex items-center gap-1">🫁 Respirar</button>
-                <div class="flex items-center gap-1">
-                    <button onclick="mudarTema('theme-cyan')" class="w-3.5 h-3.5 rounded-full bg-cyan-500 border border-slate-700"></button>
-                    <button onclick="mudarTema('theme-emerald')" class="w-3.5 h-3.5 rounded-full bg-emerald-500 border border-slate-700"></button>
-                    <button onclick="mudarTema('theme-purple')" class="w-3.5 h-3.5 rounded-full bg-purple-500 border border-slate-700"></button>
-                    <button onclick="mudarTema('theme-amber')" class="w-3.5 h-3.5 rounded-full bg-amber-500 border border-slate-700"></button>
-                </div>
+                <button id="btn-toggle-foco" class="text-[10px] font-bold text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-1 rounded-xl">🌙 Foco</button>
+                <button id="btn-open-breathing" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/40 border border-cyan-800 px-2 py-1 rounded-xl">🫁 Respiração</button>
             </div>
         </section>
 
-        <!-- SEÇÃO 1: HIDRATAÇÃO -->
-        <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl mb-6">
-            <div class="w-full flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Hidratação</h2>
-                    <button id="btn-config-agua" class="text-[10px] accent-color hover:underline">⚙️ Meta por Peso</button>
-                </div>
-                <button id="btn-reset-agua" class="text-[10px] uppercase font-bold tracking-wider text-slate-500 hover:text-rose-400 transition-colors">Resetar</button>
-            </div>
-            
-            <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 shadow-lg shadow-cyan-500/10 active:scale-95 transition-all">
-                <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center">
-                    <span class="text-2xl">💧</span>
-                    <span id="texto-agua-progresso" class="text-base font-black text-white">0%</span>
-                </div>
-            </div>
+        <!-- CONTAINER DAS SEÇÕES REGULARES (Pode ser ocultado no Modo Foco) -->
+        <div id="secoes-container" class="w-full flex flex-col gap-6">
 
-            <div class="grid grid-cols-4 gap-2 w-full">
-                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="100">+100ml</button>
-                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="250">+250ml</button>
-                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="300">+300ml</button>
-                <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="500">+500ml</button>
-            </div>
+            <!-- NOVO: PAINEL GRÁFICO DE DESEMPENHO -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">📊 Dashboard Semanal</h2>
+                <div class="grid grid-cols-2 gap-3 items-center">
+                    <div class="h-28 relative flex items-center justify-center">
+                        <canvas id="chartGeral"></canvas>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 text-center">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Conclusão Diária</span>
+                            <span id="txt-taxa-conclusao" class="text-sm font-black text-emerald-400">0%</span>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 text-center">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Badges Desbloqueadas</span>
+                            <span id="txt-badges-qtd" class="text-sm font-black accent-color">🏆 0/4</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            <div class="w-full">
-                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-1">
-                    <div id="barra-agua" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-0 transition-all duration-500"></div>
+            <!-- NOVO: TIMER POMODORO DEDICADO -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col items-center">
+                <div class="w-full flex justify-between items-center mb-2">
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">⏱️ Pomodoro de Foco</h2>
+                    <span id="pomodoro-modo" class="text-[9px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded-full uppercase">Foco (25m)</span>
                 </div>
-                <div class="w-full flex justify-between text-[11px] font-medium text-slate-400">
-                    <span id="texto-agua-atual">0ml ingeridos</span>
-                    <span id="texto-agua-meta" class="accent-color font-bold">Meta: 2000ml</span>
+                <div id="pomo-clock" class="text-4xl font-black font-mono accent-color my-1">25:00</div>
+                <div class="flex gap-2 mt-2">
+                    <button id="pomo-start" class="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-1.5 rounded-xl transition-colors">▶️ Iniciar</button>
+                    <button id="pomo-pause" class="text-xs bg-slate-800 text-slate-300 font-bold px-3 py-1.5 rounded-xl border border-slate-700">⏸️ Pausar</button>
+                    <button id="pomo-reset" class="text-xs bg-slate-800 text-slate-400 font-bold px-3 py-1.5 rounded-xl border border-slate-700">🔄</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="w-full border-t border-slate-800/60 pt-3">
-                <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Últimos 7 dias</p>
-                <div id="historico-agua" class="flex justify-between items-end h-10 gap-1"></div>
-            </div>
-        </section>
+            <!-- SEÇÃO 1: HIDRATAÇÃO + GRÁFICO -->
+            <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl">
+                <div class="w-full flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Hidratação</h2>
+                        <button id="btn-config-agua" class="text-[10px] accent-color hover:underline">⚙️ Meta</button>
+                    </div>
+                    <button id="btn-reset-agua" class="text-[10px] uppercase font-bold text-slate-500 hover:text-rose-400">Resetar</button>
+                </div>
+                
+                <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 active:scale-95 transition-all">
+                    <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center">
+                        <span class="text-xl">💧</span>
+                        <span id="texto-agua-progresso" class="text-sm font-black text-white">0%</span>
+                    </div>
+                </div>
 
-        <!-- SEÇÃO 2: HOBBIES & TIMERS (RECUPERADA) -->
-        <section class="w-full flex flex-col gap-3 mb-6">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Cuidando de Você (Hobbies)</h2>
-            <div class="grid grid-cols-3 gap-2">
-                <div onclick="iniciarTimerHobby('Leitura de Foco', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">📚</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Ler Livro</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                <div class="grid grid-cols-4 gap-2 w-full">
+                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="100">+100ml</button>
+                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="250">+250ml</button>
+                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="300">+300ml</button>
+                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="500">+500ml</button>
                 </div>
-                <div onclick="iniciarTimerHobby('Desenho / Arte', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">🎨</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Desenhar</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
-                </div>
-                <div onclick="iniciarTimerHobby('Videogame / Pause', 20)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
-                    <span class="text-2xl group-hover:scale-110 transition-transform">🎮</span>
-                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Videogame</p>
-                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">20 min</span>
-                </div>
-            </div>
-        </section>
 
-        <!-- SEÇÃO 3: COMPROMISSOS -->
-        <section class="w-full flex flex-col gap-3 mb-6">
-            <div class="flex justify-between items-center px-1">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Compromissos</h2>
-                <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
-                    <button onclick="mudarAbaCompromisso('hoje')" id="tab-hoje" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200">Hoje</button>
-                    <button onclick="mudarAbaCompromisso('amanha')" id="tab-amanha" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Amanhã</button>
-                    <button onclick="mudarAbaCompromisso('semana')" id="tab-semana" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Semana</button>
+                <!-- Gráfico Semanal Chart.js -->
+                <div class="w-full border-t border-slate-800/60 pt-3">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Histórico Semanal (ml)</p>
+                    <div class="h-24 w-full">
+                        <canvas id="chartAgua"></canvas>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="lista-compromissos" class="flex flex-col gap-2"></div>
-
-            <form id="form-compromisso" class="flex flex-col gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                <div class="flex gap-2">
-                    <input id="input-titulo" type="text" placeholder="Novo compromisso..." required class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"/>
-                    <input id="input-hora" type="time" required class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
+            <!-- HOBBIES -->
+            <section class="w-full flex flex-col gap-3">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Hobbies & Pausas</h2>
+                <div class="grid grid-cols-3 gap-2">
+                    <div onclick="iniciarTimerHobby('Leitura de Foco', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
+                        <span class="text-2xl">📚</span>
+                        <p class="text-[11px] font-bold text-slate-200">Ler Livro</p>
+                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                    </div>
+                    <div onclick="iniciarTimerHobby('Desenho / Arte', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
+                        <span class="text-2xl">🎨</span>
+                        <p class="text-[11px] font-bold text-slate-200">Desenhar</p>
+                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                    </div>
+                    <div onclick="iniciarTimerHobby('Videogame / Pause', 20)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
+                        <span class="text-2xl">🎮</span>
+                        <p class="text-[11px] font-bold text-slate-200">Videogame</p>
+                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">20 min</span>
+                    </div>
                 </div>
+            </section>
+
+            <!-- COMPROMISSOS -->
+            <section class="w-full flex flex-col gap-3">
+                <div class="flex justify-between items-center px-1">
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Compromissos</h2>
+                    <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
+                        <button onclick="mudarAbaCompromisso('hoje')" id="tab-hoje" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200">Hoje</button>
+                        <button onclick="mudarAbaCompromisso('amanha')" id="tab-amanha" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Amanhã</button>
+                        <button onclick="mudarAbaCompromisso('semana')" id="tab-semana" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Semana</button>
+                    </div>
+                </div>
+
+                <div id="lista-compromissos" class="flex flex-col gap-2"></div>
+
+                <form id="form-compromisso" class="flex flex-col gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                    <div class="flex gap-2">
+                        <input id="input-titulo" type="text" placeholder="Novo compromisso..." required class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"/>
+                        <input id="input-hora" type="time" required class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <select id="select-prioridade" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-400">
+                            <option value="baixa">Baixa 🟢</option>
+                            <option value="media" selected>Média 🟡</option>
+                            <option value="alta">Alta 🔴</option>
+                        </select>
+                        <button type="submit" class="bg-accent text-slate-950 font-bold text-xs px-4 py-1 rounded-lg">+ Adicionar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- NOVO: FINANÇAS RÁPIDAS -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
                 <div class="flex justify-between items-center">
-                    <select id="select-prioridade" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-400">
-                        <option value="baixa">Baixa 🟢</option>
-                        <option value="media" selected>Média 🟡</option>
-                        <option value="alta">Alta 🔴</option>
-                    </select>
-                    <button type="submit" class="bg-accent text-slate-950 font-bold text-xs px-4 py-1 rounded-lg transition-all">+ Adicionar</button>
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">💸 Controle Financeiro Diário</h2>
+                    <span id="total-gastos-txt" class="text-xs font-black text-rose-400">R$ 0,00</span>
                 </div>
-            </form>
-        </section>
+                <div id="lista-gastos" class="flex flex-col gap-1.5 max-h-28 overflow-y-auto"></div>
+                <form id="form-gasto" class="flex gap-2">
+                    <input id="input-gasto-desc" type="text" placeholder="Ex: Café, Almoço..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
+                    <input id="input-gasto-valor" type="number" step="0.01" placeholder="R$" required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-2 py-1.5 w-20 text-slate-200 focus:outline-none"/>
+                    <button type="submit" class="bg-rose-950 border border-rose-800 text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl">+</button>
+                </form>
+            </section>
 
-        <!-- SEÇÃO 4: SUPLEMENTOS & VITAMINAS -->
-        <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Vitaminas</h2>
-            <div id="lista-suplementos" class="flex flex-col gap-2 mb-3"></div>
-            <form id="form-suplemento" class="flex gap-2">
-                <input id="input-suplemento" type="text" placeholder="Ex: Creatina (5g)..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
-                <button type="submit" class="bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-700">+</button>
-            </form>
-        </section>
+            <!-- SUPLEMENTOS -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Vitaminas</h2>
+                <div id="lista-suplementos" class="flex flex-col gap-2 mb-3"></div>
+                <form id="form-suplemento" class="flex gap-2">
+                    <input id="input-suplemento" type="text" placeholder="Ex: Creatina (5g)..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
+                    <button type="submit" class="bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-700">+</button>
+                </form>
+            </section>
 
-        <!-- SEÇÃO 5: SAÚDE FÍSICA & PESO -->
-        <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6 flex flex-col gap-3">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">🏃 Atividades Físicas & Peso</h2>
-            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                <div>
-                    <span class="text-xs text-slate-200 font-bold block">Exercício Diário</span>
-                    <span id="tempo-exercicio" class="text-[10px] text-slate-400">0 min praticados</span>
+            <!-- SAÚDE FÍSICA -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">🏃 Atividades Físicas & Peso</h2>
+                <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <div>
+                        <span class="text-xs text-slate-200 font-bold block">Exercício Diário</span>
+                        <span id="tempo-exercicio" class="text-[10px] text-slate-400">0 min praticados</span>
+                    </div>
+                    <button onclick="adicionarExercicio(15)" class="text-xs bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-bold">+15 min</button>
                 </div>
-                <button onclick="adicionarExercicio(15)" class="text-xs bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-bold">+15 min</button>
-            </div>
-            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                <div>
-                    <span class="text-xs text-slate-200 font-bold block">Registro de Peso</span>
-                    <span id="peso-atual-txt" class="text-[10px] text-slate-400">Peso atual: 70 kg</span>
+                <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <div>
+                        <span class="text-xs text-slate-200 font-bold block">Registro de Peso</span>
+                        <span id="peso-atual-txt" class="text-[10px] text-slate-400">Peso atual: 70 kg</span>
+                    </div>
+                    <button onclick="registrarNovoPeso()" class="text-xs bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg font-bold">Atualizar</button>
                 </div>
-                <button onclick="registrarNovoPeso()" class="text-xs bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg font-bold">Atualizar</button>
-            </div>
-        </section>
+            </section>
 
-        <!-- SEÇÃO 6: ESTUDOS & BIBLIOTECA DINÂMICA (REFORMULADA) -->
-        <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6 flex flex-col gap-3">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">📚 Estudos & Biblioteca</h2>
-            
-            <!-- Card do Livro Ativo -->
-            <div id="card-livro-ativo" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2"></div>
-
-            <!-- Adicionar Novo Livro -->
-            <form id="form-livro" class="flex flex-col gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">Adicionar Novo Livro</span>
-                <div class="flex gap-2">
-                    <input id="input-livro-titulo" type="text" placeholder="Título do livro..." required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 flex-1 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
-                    <input id="input-livro-total" type="number" placeholder="Total pág" required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 w-20 text-slate-200 focus:outline-none"/>
-                    <button type="submit" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded-lg border border-slate-700">+</button>
+            <!-- BIBLIOTECA -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">📚 Biblioteca & Leitura</h2>
+                <div id="card-livro-ativo" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2"></div>
+                <form id="form-livro" class="flex flex-col gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Adicionar Livro</span>
+                    <div class="flex gap-2">
+                        <input id="input-livro-titulo" type="text" placeholder="Título..." required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 flex-1 text-slate-200 focus:outline-none"/>
+                        <input id="input-livro-total" type="number" placeholder="Páginas" required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 w-20 text-slate-200 focus:outline-none"/>
+                        <button type="submit" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded-lg border border-slate-700">+</button>
+                    </div>
+                </form>
+                <div class="mt-1">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase block mb-2">Seus Livros</span>
+                    <div id="lista-biblioteca" class="flex flex-col gap-2 max-h-36 overflow-y-auto pr-1"></div>
                 </div>
-            </form>
+            </section>
 
-            <!-- Histórico e Lista de Livros -->
-            <div class="mt-1">
-                <span class="text-[10px] font-bold text-slate-500 uppercase block mb-2">Sua Biblioteca</span>
-                <div id="lista-biblioteca" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1"></div>
-            </div>
-
-            <!-- Foco nos Estudos -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center mt-2">
-                <div>
-                    <span class="text-xs font-bold text-slate-200 block">Foco nos Estudos</span>
-                    <span id="tempo-estudo-txt" class="text-[10px] text-slate-400">0 min dedicados hoje</span>
+            <!-- GRATIDÃO -->
+            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-4">
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-2">✨ Gratidão do Dia</h2>
+                <div class="flex flex-col gap-2">
+                    <input id="gratidao-1" type="text" placeholder="1. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
+                    <input id="gratidao-2" type="text" placeholder="2. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
+                    <input id="gratidao-3" type="text" placeholder="3. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
                 </div>
-                <button onclick="iniciarTimerHobby('Sessão de Estudos', 30)" class="text-xs bg-purple-950 border border-purple-800 text-purple-300 px-3 py-1 rounded-lg font-bold">▶️ Estudar 30m</button>
-            </div>
-        </section>
+            </section>
 
-        <!-- SEÇÃO 7: GRATIDÃO DO DIA -->
-        <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-8">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-2">✨ Gratidão do Dia</h2>
-            <div class="flex flex-col gap-2">
-                <input id="gratidao-1" type="text" placeholder="1. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
-                <input id="gratidao-2" type="text" placeholder="2. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
-                <input id="gratidao-3" type="text" placeholder="3. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
-            </div>
-        </section>
+        </div>
 
         <!-- RODAPÉ -->
-        <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full flex justify-between items-center">
-            <span>Mobile-First MVP</span>
+        <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full flex justify-between items-center mt-6">
+            <span>Hub Pro v4.0</span>
             <div class="flex gap-2">
                 <button id="btn-exportar" class="hover:text-slate-400">Exportar Backup</button>
                 <span>•</span>
@@ -252,8 +283,12 @@
         <button id="btn-fechar-respiracao" class="bg-slate-800 text-slate-300 font-bold px-6 py-2 rounded-xl text-sm">Fechar</button>
     </div>
 
-    <!-- JAVASCRIPT COMPLETO -->
+    <!-- SCRIPT PRINCIPAL -->
     <script>
+        // --- INSTÂNCIAS DE GRÁFICOS (CHART.JS) ---
+        let chartAguaInstance = null;
+        let chartGeralInstance = null;
+
         // --- SOM DE CLIQUE ---
         function tocarSomClique() {
             try {
@@ -262,17 +297,17 @@
                 const gain = ctx.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(600, ctx.currentTime);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.04);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start();
-                osc.stop(ctx.currentTime + 0.05);
+                osc.stop(ctx.currentTime + 0.04);
             } catch(e) {}
         }
 
         document.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
+            if (e.target.tagName === 'BUTTON' || (e.target.tagName === 'INPUT' && e.target.type === 'checkbox')) {
                 tocarSomClique();
             }
         });
@@ -286,8 +321,9 @@
         ];
 
         let abaAtual = 'hoje';
+        let modoFoco = false;
 
-        let appData = JSON.parse(localStorage.getItem('hub_rotina_v3_db')) || {
+        let appData = JSON.parse(localStorage.getItem('hub_rotina_v4_db')) || {
             tema: 'theme-cyan',
             peso: 70,
             metaAgua: 2450,
@@ -295,7 +331,6 @@
             xp: 0,
             nivel: 1,
             streak: 0,
-            ultimaData: new Date().toLocaleDateString(),
             historicoAgua: [1200, 1500, 2000, 1800, 2100, 1900, 0],
             suplementos: [
                 { id: 1, nome: "Creatina (5g)", tomado: false },
@@ -306,7 +341,9 @@
                 { id: 1, titulo: "O Poder do Hábito", paginasLidas: 120, paginasTotal: 300, ativo: true },
                 { id: 2, titulo: "Essencialismo", paginasLidas: 210, paginasTotal: 210, ativo: false }
             ],
-            estudoMinutos: 0,
+            gastos: [
+                { id: 1, desc: "Café", valor: 4.50 }
+            ],
             gratidao: ["", "", ""],
             compromissos: [
                 { id: 1, titulo: "Tomar Vitaminas", hora: "08:30", prioridade: "alta", aba: "hoje", concluido: false },
@@ -314,13 +351,8 @@
             ]
         };
 
-        function mudarTema(novoTema) {
-            appData.tema = novoTema;
-            salvarDados();
-        }
-
         function salvarDados() {
-            localStorage.setItem('hub_rotina_v3_db', JSON.stringify(appData));
+            localStorage.setItem('hub_rotina_v4_db', JSON.stringify(appData));
             renderizarTudo();
         }
 
@@ -334,7 +366,7 @@
             salvarDados();
         }
 
-        // --- RENDERIZAR TUDO ---
+        // --- RENDERIZAÇÃO E DASHBOARDS ---
         function renderizarTudo() {
             document.getElementById('app-body').className = `bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-cyan-500 selection:text-slate-900 ${appData.tema || 'theme-cyan'}`;
 
@@ -345,20 +377,6 @@
             // Água
             const porcentagem = Math.min(Math.round((appData.aguaAtual / appData.metaAgua) * 100), 100);
             document.getElementById('texto-agua-progresso').textContent = `${porcentagem}%`;
-            document.getElementById('barra-agua').style.width = `${porcentagem}%`;
-            document.getElementById('texto-agua-atual').textContent = `${appData.aguaAtual}ml ingeridos`;
-            document.getElementById('texto-agua-meta').textContent = `Meta: ${appData.metaAgua}ml`;
-
-            // Minigráfico Água
-            const histContainer = document.getElementById('historico-agua');
-            histContainer.innerHTML = '';
-            appData.historicoAgua.forEach((val) => {
-                const alt = Math.min((val / appData.metaAgua) * 100, 100);
-                const bar = document.createElement('div');
-                bar.className = 'w-full bg-slate-800 rounded-t border-t border-slate-700';
-                bar.style.height = `${Math.max(alt, 10)}%`;
-                histContainer.appendChild(bar);
-            });
 
             // Compromissos
             const listaComp = document.getElementById('lista-compromissos');
@@ -386,6 +404,25 @@
                 });
             }
 
+            // Finanças
+            const listaGastos = document.getElementById('lista-gastos');
+            listaGastos.innerHTML = '';
+            let totalGasto = 0;
+            (appData.gastos || []).forEach(g => {
+                totalGasto += g.valor;
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs";
+                item.innerHTML = `
+                    <span class="text-slate-300">${g.desc}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-rose-400">R$ ${g.valor.toFixed(2)}</span>
+                        <button onclick="deletarGasto(${g.id})" class="text-slate-600 hover:text-rose-400">✕</button>
+                    </div>
+                `;
+                listaGastos.appendChild(item);
+            });
+            document.getElementById('total-gastos-txt').textContent = `R$ ${totalGasto.toFixed(2)}`;
+
             // Suplementos
             const listaSup = document.getElementById('lista-suplementos');
             listaSup.innerHTML = '';
@@ -402,18 +439,16 @@
                 listaSup.appendChild(item);
             });
 
-            // Saúde & Exercícios
+            // Exercícios & Peso
             document.getElementById('tempo-exercicio').textContent = `${appData.exercicioMinutos} min praticados hoje`;
             document.getElementById('peso-atual-txt').textContent = `Peso atual: ${appData.peso} kg`;
 
-            // Livros / Biblioteca
+            // Biblioteca
             const livroAtivo = appData.livros.find(l => l.ativo) || appData.livros[0];
             const cardAtivo = document.getElementById('card-livro-ativo');
-            
             if (livroAtivo) {
                 const pct = Math.min(Math.round((livroAtivo.paginasLidas / livroAtivo.paginasTotal) * 100), 100);
                 const concluido = pct >= 100;
-                
                 cardAtivo.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
@@ -428,87 +463,167 @@
                         <div class="bg-cyan-400 h-full" style="width: ${pct}%"></div>
                     </div>
                     <div class="flex gap-2 mt-1">
-                        <button onclick="avancarPaginas(${livroAtivo.id}, 10)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg hover:border-slate-700">+10 pág</button>
-                        <button onclick="avancarPaginas(${livroAtivo.id}, 25)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg hover:border-slate-700">+25 pág</button>
+                        <button onclick="avancarPaginas(${livroAtivo.id}, 10)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg">+10 pág</button>
+                        <button onclick="avancarPaginas(${livroAtivo.id}, 25)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg">+25 pág</button>
                     </div>
                 `;
             } else {
-                cardAtivo.innerHTML = `<p class="text-center text-xs text-slate-500 py-2">Nenhum livro selecionado.</p>`;
+                cardAtivo.innerHTML = `<p class="text-center text-xs text-slate-500 py-2">Nenhum livro cadastrado.</p>`;
             }
 
-            // Lista da Biblioteca
             const listaBib = document.getElementById('lista-biblioteca');
             listaBib.innerHTML = '';
             appData.livros.forEach(livro => {
                 const pct = Math.min(Math.round((livro.paginasLidas / livro.paginasTotal) * 100), 100);
-                const isConcluido = pct >= 100;
                 const item = document.createElement('div');
                 item.className = `p-2 rounded-xl border text-xs flex justify-between items-center ${livro.ativo ? 'bg-slate-900 border-cyan-500/40' : 'bg-slate-950 border-slate-800'}`;
-                
                 item.innerHTML = `
                     <div class="flex flex-col cursor-pointer flex-1" onclick="definirLivroAtivo(${livro.id})">
-                        <span class="font-bold text-slate-200 ${isConcluido ? 'line-through text-slate-500' : ''}">${livro.titulo}</span>
+                        <span class="font-bold text-slate-200">${livro.titulo}</span>
                         <span class="text-[9px] text-slate-400">${livro.paginasLidas}/${livro.paginasTotal} pág (${pct}%)</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        ${isConcluido ? '<span class="text-[9px] text-emerald-400 font-bold">✓</span>' : ''}
-                        <button onclick="deletarLivro(${livro.id})" class="text-slate-600 hover:text-rose-400 text-xs">✕</button>
-                    </div>
+                    <button onclick="deletarLivro(${livro.id})" class="text-slate-600 hover:text-rose-400 text-xs">✕</button>
                 `;
                 listaBib.appendChild(item);
             });
-
-            document.getElementById('tempo-estudo-txt').textContent = `${appData.estudoMinutos} min dedicados hoje`;
 
             // Gratidão
             document.getElementById('gratidao-1').value = appData.gratidao[0] || '';
             document.getElementById('gratidao-2').value = appData.gratidao[1] || '';
             document.getElementById('gratidao-3').value = appData.gratidao[2] || '';
+
+            // Renderizar Gráficos
+            renderizarGraficos();
         }
 
-        // --- AÇÕES DE LIVROS / BIBLIOTECA ---
-        document.getElementById('form-livro').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const titulo = document.getElementById('input-livro-titulo').value.trim();
-            const paginasTotal = parseInt(document.getElementById('input-livro-total').value);
+        // --- GRÁFICOS COM CHART.JS ---
+        function renderizarGraficos() {
+            // 1. Gráfico de Água
+            const ctxAgua = document.getElementById('chartAgua').getContext('2d');
+            if (chartAguaInstance) chartAguaInstance.destroy();
+            
+            const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+            chartAguaInstance = new Chart(ctxAgua, {
+                type: 'bar',
+                data: {
+                    labels: dias,
+                    datasets: [{
+                        data: appData.historicoAgua,
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { display: false }
+                    }
+                }
+            });
 
-            if (titulo && paginasTotal > 0) {
-                appData.livros.forEach(l => l.ativo = false);
-                appData.livros.push({
-                    id: Date.now(),
-                    titulo,
-                    paginasLidas: 0,
-                    paginasTotal,
-                    ativo: true
-                });
-                document.getElementById('input-livro-titulo').value = '';
-                document.getElementById('input-livro-total').value = '';
-                salvarDados();
+            // 2. Gráfico Donut de Taxa de Conclusão
+            const totalComp = appData.compromissos.length || 1;
+            const compDone = appData.compromissos.filter(c => c.concluido).length;
+            const taxa = Math.round((compDone / totalComp) * 100);
+            document.getElementById('txt-taxa-conclusao').textContent = `${taxa}%`;
+
+            const ctxGeral = document.getElementById('chartGeral').getContext('2d');
+            if (chartGeralInstance) chartGeralInstance.destroy();
+
+            chartGeralInstance = new Chart(ctxGeral, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concluído', 'Pendente'],
+                    datasets: [{
+                        data: [compDone, totalComp - compDone],
+                        backgroundColor: ['#10b981', '#1e293b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // --- MODO FOCO ---
+        document.getElementById('btn-toggle-foco').addEventListener('click', () => {
+            modoFoco = !modoFoco;
+            const cont = document.getElementById('secoes-container');
+            const btn = document.getElementById('btn-toggle-foco');
+            
+            if (modoFoco) {
+                cont.classList.add('hidden');
+                btn.textContent = "☀️ Sair do Foco";
+                btn.className = "text-[10px] font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-1 rounded-xl";
+            } else {
+                cont.classList.remove('hidden');
+                btn.textContent = "🌙 Foco";
+                btn.className = "text-[10px] font-bold text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-1 rounded-xl";
             }
         });
 
-        function avancarPaginas(id, qtd) {
-            const livro = appData.livros.find(l => l.id === id);
-            if (livro) {
-                livro.paginasLidas = Math.min(livro.paginasLidas + qtd, livro.paginasTotal);
-                adicionarXP(15);
-            }
-        }
+        // --- POMODORO ---
+        let pomoInterval;
+        let pomoTime = 25 * 60;
+        let pomoRunning = false;
 
-        function definirLivroAtivo(id) {
-            appData.livros.forEach(l => l.ativo = (l.id === id));
+        document.getElementById('pomo-start').addEventListener('click', () => {
+            if (pomoRunning) return;
+            pomoRunning = true;
+            pomoInterval = setInterval(() => {
+                pomoTime--;
+                const m = String(Math.floor(pomoTime / 60)).padStart(2, '0');
+                const s = String(pomoTime % 60).padStart(2, '0');
+                document.getElementById('pomo-clock').textContent = `${m}:${s}`;
+
+                if (pomoTime <= 0) {
+                    clearInterval(pomoInterval);
+                    alert("Sessão Pomodoro Concluída! Hora de uma pausa.");
+                    adicionarXP(25);
+                    pomoTime = 25 * 60;
+                    pomoRunning = false;
+                }
+            }, 1000);
+        });
+
+        document.getElementById('pomo-pause').addEventListener('click', () => {
+            clearInterval(pomoInterval);
+            pomoRunning = false;
+        });
+
+        document.getElementById('pomo-reset').addEventListener('click', () => {
+            clearInterval(pomoInterval);
+            pomoRunning = false;
+            pomoTime = 25 * 60;
+            document.getElementById('pomo-clock').textContent = "25:00";
+        });
+
+        // --- FINANÇAS ---
+        document.getElementById('form-gasto').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const desc = document.getElementById('input-gasto-desc').value;
+            const valor = parseFloat(document.getElementById('input-gasto-valor').value);
+            
+            if (!appData.gastos) appData.gastos = [];
+            appData.gastos.push({ id: Date.now(), desc, valor });
+            document.getElementById('input-gasto-desc').value = '';
+            document.getElementById('input-gasto-valor').value = '';
+            salvarDados();
+        });
+
+        function deletarGasto(id) {
+            appData.gastos = appData.gastos.filter(g => g.id !== id);
             salvarDados();
         }
 
-        function deletarLivro(id) {
-            appData.livros = appData.livros.filter(l => l.id !== id);
-            if (appData.livros.length > 0 && !appData.livros.some(l => l.ativo)) {
-                appData.livros[0].ativo = true;
-            }
-            salvarDados();
-        }
-
-        // --- EVENTOS DIVERSOS ---
+        // --- OUTRAS AÇÕES ---
         document.getElementById('frase-dia').addEventListener('click', () => {
             const idx = Math.floor(Math.random() * FRASES.length);
             document.getElementById('frase-dia').textContent = FRASES[idx] + ' 🔄';
@@ -524,15 +639,6 @@
         document.getElementById('btn-reset-agua').addEventListener('click', () => {
             appData.aguaAtual = 0;
             salvarDados();
-        });
-
-        document.getElementById('btn-config-agua').addEventListener('click', () => {
-            const peso = prompt("Insira seu peso atual (kg):", appData.peso);
-            if (peso && !isNaN(peso)) {
-                appData.peso = parseFloat(peso);
-                appData.metaAgua = Math.round(appData.peso * 35);
-                salvarDados();
-            }
         });
 
         function mudarAbaCompromisso(aba) {
@@ -553,9 +659,6 @@
 
             appData.compromissos.push({ id: Date.now(), titulo, hora, prioridade, aba: abaAtual, concluido: false });
             appData.compromissos.sort((a, b) => a.hora.localeCompare(b.hora));
-            
-            document.getElementById('input-titulo').value = '';
-            document.getElementById('input-hora').value = '';
             salvarDados();
         });
 
@@ -577,7 +680,6 @@
             e.preventDefault();
             const nome = document.getElementById('input-suplemento').value;
             appData.suplementos.push({ id: Date.now(), nome, tomado: false });
-            document.getElementById('input-suplemento').value = '';
             salvarDados();
         });
 
@@ -601,12 +703,42 @@
         }
 
         function registrarNovoPeso() {
-            const p = prompt("Digite seu novo peso (kg):", appData.peso);
+            const p = prompt("Novo peso (kg):", appData.peso);
             if (p && !isNaN(p)) {
                 appData.peso = parseFloat(p);
                 appData.metaAgua = Math.round(appData.peso * 35);
                 salvarDados();
             }
+        }
+
+        document.getElementById('form-livro').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('input-livro-titulo').value.trim();
+            const paginasTotal = parseInt(document.getElementById('input-livro-total').value);
+
+            if (titulo && paginasTotal > 0) {
+                appData.livros.forEach(l => l.ativo = false);
+                appData.livros.push({ id: Date.now(), titulo, paginasLidas: 0, paginasTotal, ativo: true });
+                salvarDados();
+            }
+        });
+
+        function avancarPaginas(id, qtd) {
+            const livro = appData.livros.find(l => l.id === id);
+            if (livro) {
+                livro.paginasLidas = Math.min(livro.paginasLidas + qtd, livro.paginasTotal);
+                adicionarXP(15);
+            }
+        }
+
+        function definirLivroAtivo(id) {
+            appData.livros.forEach(l => l.ativo = (l.id === id));
+            salvarDados();
+        }
+
+        function deletarLivro(id) {
+            appData.livros = appData.livros.filter(l => l.id !== id);
+            salvarDados();
         }
 
         document.querySelectorAll('.input-gratidao').forEach((inp, idx) => {
@@ -616,7 +748,15 @@
             });
         });
 
-        // Timers e Modais
+        // Modais
+        document.getElementById('btn-open-breathing').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.remove('hidden');
+            document.getElementById('modal-respiracao').classList.add('flex');
+        });
+        document.getElementById('btn-fechar-respiracao').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.add('hidden');
+        });
+
         let timerInterval;
         function iniciarTimerHobby(nome, minutos) {
             document.getElementById('timer-titulo').textContent = nome;
@@ -634,8 +774,7 @@
                 
                 if (--tempoRestante < 0) {
                     clearInterval(timerInterval);
-                    alert(`Tempo concluído para: ${nome}!`);
-                    if (nome.includes('Estudo')) appData.estudoMinutos += minutos;
+                    alert(`Concluído: ${nome}!`);
                     adicionarXP(30);
                     modal.classList.add('hidden');
                 }
@@ -647,20 +786,12 @@
             document.getElementById('modal-timer').classList.add('hidden');
         });
 
-        document.getElementById('btn-open-breathing').addEventListener('click', () => {
-            document.getElementById('modal-respiracao').classList.remove('hidden');
-            document.getElementById('modal-respiracao').classList.add('flex');
-        });
-        document.getElementById('btn-fechar-respiracao').addEventListener('click', () => {
-            document.getElementById('modal-respiracao').classList.add('hidden');
-        });
-
         document.getElementById('btn-exportar').addEventListener('click', () => {
             const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `hub-rotina-backup-${new Date().toISOString().slice(0,10)}.json`;
+            a.download = `hub-rotina-backup.json`;
             a.click();
         });
 
@@ -672,7 +803,7 @@
                     salvarDados();
                     alert("Dados importados com sucesso!");
                 } catch(err) {
-                    alert("Formato JSON inválido.");
+                    alert("JSON inválido.");
                 }
             }
         });
