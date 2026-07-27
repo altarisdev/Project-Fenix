@@ -13,7 +13,6 @@
         }
         .breathe-animation { animation: breathe 8s ease-in-out infinite; }
         
-        /* Classes dinâmicas para temas */
         .theme-cyan { --accent: #06b6d4; --accent-light: #22d3ee; }
         .theme-emerald { --accent: #10b981; --accent-light: #34d399; }
         .theme-purple { --accent: #a855f7; --accent-light: #c084fc; }
@@ -28,7 +27,7 @@
 
     <div class="flex flex-col items-center p-4 sm:p-6 w-full max-w-md mx-auto">
         
-        <!-- HEADER COM GAMIFICAÇÃO E CITACÃO -->
+        <!-- HEADER COM GAMIFICAÇÃO E CITAÇÃO -->
         <header class="w-full flex justify-between items-center py-4 mb-2 border-b border-slate-900">
             <div>
                 <h1 class="text-xl font-black text-emerald-400 tracking-tight flex items-center gap-2">
@@ -43,7 +42,7 @@
             </div>
         </header>
 
-        <!-- SEÇÃO: TEMA E DIÁRIO DE HUMOR -->
+        <!-- TEMA, HUMOR & RESPIRAÇÃO -->
         <section class="w-full bg-slate-900/40 border border-slate-800/80 rounded-2xl p-3 mb-4 flex justify-between items-center">
             <div class="flex gap-2 text-xl" id="mood-selector">
                 <button data-mood="😃" class="hover:scale-125 transition-transform">😃</button>
@@ -52,12 +51,14 @@
                 <button data-mood="😔" class="hover:scale-125 transition-transform">😔</button>
                 <button data-mood="😫" class="hover:scale-125 transition-transform">😫</button>
             </div>
-            <div class="flex items-center gap-1.5">
-                <span class="text-[10px] text-slate-500 font-bold uppercase">Tema:</span>
-                <button onclick="mudarTema('theme-cyan')" class="w-4 h-4 rounded-full bg-cyan-500 border border-slate-700"></button>
-                <button onclick="mudarTema('theme-emerald')" class="w-4 h-4 rounded-full bg-emerald-500 border border-slate-700"></button>
-                <button onclick="mudarTema('theme-purple')" class="w-4 h-4 rounded-full bg-purple-500 border border-slate-700"></button>
-                <button onclick="mudarTema('theme-amber')" class="w-4 h-4 rounded-full bg-amber-500 border border-slate-700"></button>
+            <div class="flex items-center gap-2">
+                <button id="btn-open-breathing" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/50 border border-cyan-800 px-2 py-1 rounded-xl flex items-center gap-1">🫁 Respirar</button>
+                <div class="flex items-center gap-1">
+                    <button onclick="mudarTema('theme-cyan')" class="w-3.5 h-3.5 rounded-full bg-cyan-500 border border-slate-700"></button>
+                    <button onclick="mudarTema('theme-emerald')" class="w-3.5 h-3.5 rounded-full bg-emerald-500 border border-slate-700"></button>
+                    <button onclick="mudarTema('theme-purple')" class="w-3.5 h-3.5 rounded-full bg-purple-500 border border-slate-700"></button>
+                    <button onclick="mudarTema('theme-amber')" class="w-3.5 h-3.5 rounded-full bg-amber-500 border border-slate-700"></button>
+                </div>
             </div>
         </section>
 
@@ -78,7 +79,6 @@
                 </div>
             </div>
 
-            <!-- Atalhos Dinâmicos -->
             <div class="grid grid-cols-4 gap-2 w-full">
                 <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="100">+100ml</button>
                 <button class="btn-add-agua-val bg-slate-800 hover:bg-slate-700 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="250">+250ml</button>
@@ -102,11 +102,32 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 2: ABAS DE COMPROMISSOS -->
+        <!-- SEÇÃO 2: HOBBIES & TIMERS (RECUPERADA) -->
+        <section class="w-full flex flex-col gap-3 mb-6">
+            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Cuidando de Você (Hobbies)</h2>
+            <div class="grid grid-cols-3 gap-2">
+                <div onclick="iniciarTimerHobby('Leitura de Foco', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">📚</span>
+                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Ler Livro</p>
+                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                </div>
+                <div onclick="iniciarTimerHobby('Desenho / Arte', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">🎨</span>
+                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Desenhar</p>
+                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
+                </div>
+                <div onclick="iniciarTimerHobby('Videogame / Pause', 20)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 hover:border-slate-700 cursor-pointer group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">🎮</span>
+                    <p class="text-[11px] font-bold text-slate-200 leading-tight">Videogame</p>
+                    <span class="text-[9px] font-bold text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">20 min</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: COMPROMISSOS -->
         <section class="w-full flex flex-col gap-3 mb-6">
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Compromissos</h2>
-                <!-- ABAS DE NAVEGAÇÃO -->
                 <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
                     <button onclick="mudarAbaCompromisso('hoje')" id="tab-hoje" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200">Hoje</button>
                     <button onclick="mudarAbaCompromisso('amanha')" id="tab-amanha" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Amanhã</button>
@@ -132,7 +153,7 @@
             </form>
         </section>
 
-        <!-- SEÇÃO 3: RASTREADOR DE SUPLEMENTOS PERSONALIZADO -->
+        <!-- SEÇÃO 4: SUPLEMENTOS & VITAMINAS -->
         <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6">
             <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Vitaminas</h2>
             <div id="lista-suplementos" class="flex flex-col gap-2 mb-3"></div>
@@ -142,10 +163,9 @@
             </form>
         </section>
 
-        <!-- SEÇÃO 4: SAÚDE FÍSICA & PESO -->
+        <!-- SEÇÃO 5: SAÚDE FÍSICA & PESO -->
         <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6 flex flex-col gap-3">
             <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">🏃 Atividades Físicas & Peso</h2>
-            
             <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                 <div>
                     <span class="text-xs text-slate-200 font-bold block">Exercício Diário</span>
@@ -153,7 +173,6 @@
                 </div>
                 <button onclick="adicionarExercicio(15)" class="text-xs bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-bold">+15 min</button>
             </div>
-
             <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                 <div>
                     <span class="text-xs text-slate-200 font-bold block">Registro de Peso</span>
@@ -163,24 +182,31 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 5: ESTUDOS & LEITURA -->
+        <!-- SEÇÃO 6: ESTUDOS & BIBLIOTECA DINÂMICA (REFORMULADA) -->
         <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-6 flex flex-col gap-3">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">📚 Estudos & Leitura</h2>
+            <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">📚 Estudos & Biblioteca</h2>
             
-            <!-- Contador de Livro/Páginas -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
-                <div class="flex justify-between items-center">
-                    <input id="input-livro-nome" type="text" value="O Poder do Hábito" class="bg-transparent text-xs font-bold text-slate-200 focus:outline-none flex-1"/>
-                    <span id="progresso-paginas-txt" class="text-[10px] text-cyan-400 font-bold">120/300 pág</span>
-                </div>
+            <!-- Card do Livro Ativo -->
+            <div id="card-livro-ativo" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2"></div>
+
+            <!-- Adicionar Novo Livro -->
+            <form id="form-livro" class="flex flex-col gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Adicionar Novo Livro</span>
                 <div class="flex gap-2">
-                    <button onclick="adicionarPaginas(10)" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-1 px-2.5 rounded-lg border border-slate-700">+10 pág</button>
-                    <button onclick="adicionarPaginas(25)" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-1 px-2.5 rounded-lg border border-slate-700">+25 pág</button>
+                    <input id="input-livro-titulo" type="text" placeholder="Título do livro..." required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 flex-1 text-slate-200 placeholder:text-slate-600 focus:outline-none"/>
+                    <input id="input-livro-total" type="number" placeholder="Total pág" required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 w-20 text-slate-200 focus:outline-none"/>
+                    <button type="submit" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded-lg border border-slate-700">+</button>
                 </div>
+            </form>
+
+            <!-- Histórico e Lista de Livros -->
+            <div class="mt-1">
+                <span class="text-[10px] font-bold text-slate-500 uppercase block mb-2">Sua Biblioteca</span>
+                <div id="lista-biblioteca" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- Meta de Estudo -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+            <!-- Foco nos Estudos -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center mt-2">
                 <div>
                     <span class="text-xs font-bold text-slate-200 block">Foco nos Estudos</span>
                     <span id="tempo-estudo-txt" class="text-[10px] text-slate-400">0 min dedicados hoje</span>
@@ -189,7 +215,7 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 6: REGISTRO DE GRATIDÃO -->
+        <!-- SEÇÃO 7: GRATIDÃO DO DIA -->
         <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-8">
             <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-2">✨ Gratidão do Dia</h2>
             <div class="flex flex-col gap-2">
@@ -211,16 +237,24 @@
 
     </div>
 
-    <!-- MODAL TIMER -->
+    <!-- MODAIS -->
     <div id="modal-timer" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
         <h3 id="timer-titulo" class="text-xl font-bold text-slate-200 mb-2">Timer</h3>
         <div id="timer-display" class="text-6xl font-black accent-color font-mono my-6">15:00</div>
         <button id="btn-fechar-timer" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2 rounded-xl text-sm">Encerrar / Sair</button>
     </div>
 
+    <div id="modal-respiracao" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
+        <h3 class="text-lg font-bold text-slate-200 mb-8">Respiração Guiada (Box Breathing)</h3>
+        <div class="w-40 h-40 rounded-full border-4 border-cyan-400 flex items-center justify-center breathe-animation mb-8">
+            <span class="text-xs font-bold text-cyan-300 uppercase tracking-widest">Inspire / Expire</span>
+        </div>
+        <button id="btn-fechar-respiracao" class="bg-slate-800 text-slate-300 font-bold px-6 py-2 rounded-xl text-sm">Fechar</button>
+    </div>
+
     <!-- JAVASCRIPT COMPLETO -->
     <script>
-        // --- GERADOR DE SOM DE CLIQUE (Web Audio API) ---
+        // --- SOM DE CLIQUE ---
         function tocarSomClique() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -237,25 +271,23 @@
             } catch(e) {}
         }
 
-        // Add som a todos os botões
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
                 tocarSomClique();
             }
         });
 
-        // --- BASES DE DADOS & ESTADO ---
+        // --- ESTADO INICIAL ---
         const FRASES = [
             '"A clareza precede a maestria."',
             '"Pequenas disciplinas diárias geram grandes conquistas."',
             '"O foco é dizer não a centenas de boas ideias."',
-            '"Crie hábitos e seus hábitos criarão você."',
-            '"Você não falha até parar de tentar."'
+            '"Crie hábitos e seus hábitos criarão você."'
         ];
 
         let abaAtual = 'hoje';
 
-        let appData = JSON.parse(localStorage.getItem('hub_rotina_completo_db')) || {
+        let appData = JSON.parse(localStorage.getItem('hub_rotina_v3_db')) || {
             tema: 'theme-cyan',
             peso: 70,
             metaAgua: 2450,
@@ -270,9 +302,10 @@
                 { id: 2, nome: "Multivitamínico", tomado: false }
             ],
             exercicioMinutos: 0,
-            livro: "O Poder do Hábito",
-            paginasLidas: 120,
-            paginasTotal: 300,
+            livros: [
+                { id: 1, titulo: "O Poder do Hábito", paginasLidas: 120, paginasTotal: 300, ativo: true },
+                { id: 2, titulo: "Essencialismo", paginasLidas: 210, paginasTotal: 210, ativo: false }
+            ],
             estudoMinutos: 0,
             gratidao: ["", "", ""],
             compromissos: [
@@ -281,15 +314,13 @@
             ]
         };
 
-        // --- ATUALIZAR TEMA ---
         function mudarTema(novoTema) {
             appData.tema = novoTema;
-            document.getElementById('app-body').className = `bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-cyan-500 selection:text-slate-900 ${novoTema}`;
             salvarDados();
         }
 
         function salvarDados() {
-            localStorage.setItem('hub_rotina_completo_db', JSON.stringify(appData));
+            localStorage.setItem('hub_rotina_v3_db', JSON.stringify(appData));
             renderizarTudo();
         }
 
@@ -303,12 +334,10 @@
             salvarDados();
         }
 
-        // --- RENDERIZAÇÃO GERAL ---
+        // --- RENDERIZAR TUDO ---
         function renderizarTudo() {
-            // Aplicar classe de tema
             document.getElementById('app-body').className = `bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-cyan-500 selection:text-slate-900 ${appData.tema || 'theme-cyan'}`;
 
-            // Header & Level
             document.getElementById('streak-tag').textContent = `🔥 ${appData.streak} dias`;
             document.getElementById('user-level').textContent = `Nível ${appData.nivel}`;
             document.getElementById('user-xp').textContent = `${appData.xp} / 100 XP`;
@@ -331,7 +360,7 @@
                 histContainer.appendChild(bar);
             });
 
-            // Compromissos por Aba
+            // Compromissos
             const listaComp = document.getElementById('lista-compromissos');
             listaComp.innerHTML = '';
             const filtrados = appData.compromissos.filter(c => (c.aba || 'hoje') === abaAtual);
@@ -373,12 +402,62 @@
                 listaSup.appendChild(item);
             });
 
-            // Saúde Física / Peso
+            // Saúde & Exercícios
             document.getElementById('tempo-exercicio').textContent = `${appData.exercicioMinutos} min praticados hoje`;
             document.getElementById('peso-atual-txt').textContent = `Peso atual: ${appData.peso} kg`;
 
-            // Estudos & Livros
-            document.getElementById('progresso-paginas-txt').textContent = `${appData.paginasLidas}/${appData.paginasTotal} pág`;
+            // Livros / Biblioteca
+            const livroAtivo = appData.livros.find(l => l.ativo) || appData.livros[0];
+            const cardAtivo = document.getElementById('card-livro-ativo');
+            
+            if (livroAtivo) {
+                const pct = Math.min(Math.round((livroAtivo.paginasLidas / livroAtivo.paginasTotal) * 100), 100);
+                const concluido = pct >= 100;
+                
+                cardAtivo.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-wider block">Lendo Agora</span>
+                            <h4 class="text-xs font-bold text-slate-100">${livroAtivo.titulo}</h4>
+                        </div>
+                        <span class="text-[10px] font-bold ${concluido ? 'text-emerald-400 bg-emerald-950/50 border border-emerald-800' : 'text-cyan-400'} px-2 py-0.5 rounded-full">
+                            ${concluido ? '✓ Concluído' : `${livroAtivo.paginasLidas}/${livroAtivo.paginasTotal} pág (${pct}%)`}
+                        </span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden my-1">
+                        <div class="bg-cyan-400 h-full" style="width: ${pct}%"></div>
+                    </div>
+                    <div class="flex gap-2 mt-1">
+                        <button onclick="avancarPaginas(${livroAtivo.id}, 10)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg hover:border-slate-700">+10 pág</button>
+                        <button onclick="avancarPaginas(${livroAtivo.id}, 25)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg hover:border-slate-700">+25 pág</button>
+                    </div>
+                `;
+            } else {
+                cardAtivo.innerHTML = `<p class="text-center text-xs text-slate-500 py-2">Nenhum livro selecionado.</p>`;
+            }
+
+            // Lista da Biblioteca
+            const listaBib = document.getElementById('lista-biblioteca');
+            listaBib.innerHTML = '';
+            appData.livros.forEach(livro => {
+                const pct = Math.min(Math.round((livro.paginasLidas / livro.paginasTotal) * 100), 100);
+                const isConcluido = pct >= 100;
+                const item = document.createElement('div');
+                item.className = `p-2 rounded-xl border text-xs flex justify-between items-center ${livro.ativo ? 'bg-slate-900 border-cyan-500/40' : 'bg-slate-950 border-slate-800'}`;
+                
+                item.innerHTML = `
+                    <div class="flex flex-col cursor-pointer flex-1" onclick="definirLivroAtivo(${livro.id})">
+                        <span class="font-bold text-slate-200 ${isConcluido ? 'line-through text-slate-500' : ''}">${livro.titulo}</span>
+                        <span class="text-[9px] text-slate-400">${livro.paginasLidas}/${livro.paginasTotal} pág (${pct}%)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${isConcluido ? '<span class="text-[9px] text-emerald-400 font-bold">✓</span>' : ''}
+                        <button onclick="deletarLivro(${livro.id})" class="text-slate-600 hover:text-rose-400 text-xs">✕</button>
+                    </div>
+                `;
+                listaBib.appendChild(item);
+            });
+
             document.getElementById('tempo-estudo-txt').textContent = `${appData.estudoMinutos} min dedicados hoje`;
 
             // Gratidão
@@ -387,14 +466,54 @@
             document.getElementById('gratidao-3').value = appData.gratidao[2] || '';
         }
 
-        // --- AÇÕES & EVENTOS ---
-        // Trocar Frase
+        // --- AÇÕES DE LIVROS / BIBLIOTECA ---
+        document.getElementById('form-livro').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('input-livro-titulo').value.trim();
+            const paginasTotal = parseInt(document.getElementById('input-livro-total').value);
+
+            if (titulo && paginasTotal > 0) {
+                appData.livros.forEach(l => l.ativo = false);
+                appData.livros.push({
+                    id: Date.now(),
+                    titulo,
+                    paginasLidas: 0,
+                    paginasTotal,
+                    ativo: true
+                });
+                document.getElementById('input-livro-titulo').value = '';
+                document.getElementById('input-livro-total').value = '';
+                salvarDados();
+            }
+        });
+
+        function avancarPaginas(id, qtd) {
+            const livro = appData.livros.find(l => l.id === id);
+            if (livro) {
+                livro.paginasLidas = Math.min(livro.paginasLidas + qtd, livro.paginasTotal);
+                adicionarXP(15);
+            }
+        }
+
+        function definirLivroAtivo(id) {
+            appData.livros.forEach(l => l.ativo = (l.id === id));
+            salvarDados();
+        }
+
+        function deletarLivro(id) {
+            appData.livros = appData.livros.filter(l => l.id !== id);
+            if (appData.livros.length > 0 && !appData.livros.some(l => l.ativo)) {
+                appData.livros[0].ativo = true;
+            }
+            salvarDados();
+        }
+
+        // --- EVENTOS DIVERSOS ---
         document.getElementById('frase-dia').addEventListener('click', () => {
             const idx = Math.floor(Math.random() * FRASES.length);
             document.getElementById('frase-dia').textContent = FRASES[idx] + ' 🔄';
         });
 
-        // Água
         document.querySelectorAll('.btn-add-agua-val').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 appData.aguaAtual += parseInt(e.target.getAttribute('data-ml'));
@@ -408,7 +527,7 @@
         });
 
         document.getElementById('btn-config-agua').addEventListener('click', () => {
-            const peso = prompt("Insira seu peso atual (kg) para recalcular a meta automática:", appData.peso);
+            const peso = prompt("Insira seu peso atual (kg):", appData.peso);
             if (peso && !isNaN(peso)) {
                 appData.peso = parseFloat(peso);
                 appData.metaAgua = Math.round(appData.peso * 35);
@@ -416,16 +535,12 @@
             }
         });
 
-        // Abas Compromissos
         function mudarAbaCompromisso(aba) {
             abaAtual = aba;
             ['hoje', 'amanha', 'semana'].forEach(a => {
-                const el = document.getElementById(`tab-${a}`);
-                if (a === aba) {
-                    el.className = "px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200";
-                } else {
-                    el.className = "px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500";
-                }
+                document.getElementById(`tab-${a}`).className = (a === aba) 
+                    ? "px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200" 
+                    : "px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500";
             });
             renderizarTudo();
         }
@@ -458,7 +573,6 @@
             salvarDados();
         }
 
-        // Suplementos
         document.getElementById('form-suplemento').addEventListener('submit', (e) => {
             e.preventDefault();
             const nome = document.getElementById('input-suplemento').value;
@@ -481,14 +595,13 @@
             salvarDados();
         }
 
-        // Atividades & Peso
         function adicionarExercicio(min) {
             appData.exercicioMinutos += min;
             adicionarXP(20);
         }
 
         function registrarNovoPeso() {
-            const p = prompt("Digite seu peso novo (kg):", appData.peso);
+            const p = prompt("Digite seu novo peso (kg):", appData.peso);
             if (p && !isNaN(p)) {
                 appData.peso = parseFloat(p);
                 appData.metaAgua = Math.round(appData.peso * 35);
@@ -496,13 +609,6 @@
             }
         }
 
-        // Livros & Estudos
-        function adicionarPaginas(qtd) {
-            appData.paginasLidas += qtd;
-            adicionarXP(15);
-        }
-
-        // Gratidão
         document.querySelectorAll('.input-gratidao').forEach((inp, idx) => {
             inp.addEventListener('change', (e) => {
                 appData.gratidao[idx] = e.target.value;
@@ -510,7 +616,7 @@
             });
         });
 
-        // Timer Modal
+        // Timers e Modais
         let timerInterval;
         function iniciarTimerHobby(nome, minutos) {
             document.getElementById('timer-titulo').textContent = nome;
@@ -541,7 +647,14 @@
             document.getElementById('modal-timer').classList.add('hidden');
         });
 
-        // Exportar/Importar
+        document.getElementById('btn-open-breathing').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.remove('hidden');
+            document.getElementById('modal-respiracao').classList.add('flex');
+        });
+        document.getElementById('btn-fechar-respiracao').addEventListener('click', () => {
+            document.getElementById('modal-respiracao').classList.add('hidden');
+        });
+
         document.getElementById('btn-exportar').addEventListener('click', () => {
             const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -552,14 +665,14 @@
         });
 
         document.getElementById('btn-importar').addEventListener('click', () => {
-            const jsonStr = prompt("Cole o conteúdo do seu backup JSON aqui:");
+            const jsonStr = prompt("Cole o código JSON do seu backup:");
             if (jsonStr) {
                 try {
                     appData = JSON.parse(jsonStr);
                     salvarDados();
-                    alert("Dados importados!");
+                    alert("Dados importados com sucesso!");
                 } catch(err) {
-                    alert("JSON inválido.");
+                    alert("Formato JSON inválido.");
                 }
             }
         });
