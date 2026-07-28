@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Hub de Rotina Definitivo</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Meu Hub de Rotina Definitivo - Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js para Gráficos Interativos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @keyframes breathe {
@@ -14,17 +12,9 @@
             50% { transform: scale(1.15); opacity: 1; }
         }
         .breathe-animation { animation: breathe 8s ease-in-out infinite; }
-        
         .theme-cyan { --accent: #06b6d4; --accent-light: #22d3ee; }
-        .theme-emerald { --accent: #10b981; --accent-light: #34d399; }
-        .theme-purple { --accent: #a855f7; --accent-light: #c084fc; }
-        .theme-amber { --accent: #f59e0b; --accent-light: #fbbf24; }
-        
         .accent-color { color: var(--accent-light); }
         .bg-accent { background-color: var(--accent); }
-        .border-accent { border-color: var(--accent); }
-
-        /* Scrollbar customizada */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
@@ -48,7 +38,7 @@
             </div>
         </header>
 
-        <!-- TOOLBAR: TEMAS, HUMOR E MODO FOCO -->
+        <!-- TOOLBAR: HUMOR, MODO FOCO, CALENDÁRIO -->
         <section class="w-full bg-slate-900/40 border border-slate-800/80 rounded-2xl p-3 mb-4 flex justify-between items-center">
             <div class="flex gap-1.5 text-lg" id="mood-selector">
                 <button data-mood="😃" class="hover:scale-125 transition-transform">😃</button>
@@ -57,15 +47,37 @@
                 <button data-mood="😔" class="hover:scale-125 transition-transform">😔</button>
             </div>
             <div class="flex items-center gap-2">
-                <button id="btn-toggle-foco" class="text-[10px] font-bold text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-1 rounded-xl">🌙 Foco</button>
-                <button id="btn-open-breathing" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/40 border border-cyan-800 px-2 py-1 rounded-xl">🫁 Respiração</button>
+                <button id="btn-toggle-agenda" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/40 border border-cyan-800 px-2.5 py-1 rounded-xl">📅 Agenda Mensal</button>
+                <button id="btn-toggle-foco" class="text-[10px] font-bold text-amber-400 bg-amber-950/40 border border-amber-800 px-2.5 py-1 rounded-xl">🌙 Foco</button>
             </div>
         </section>
 
-        <!-- CONTAINER DAS SEÇÕES REGULARES (Pode ser ocultado no Modo Foco) -->
+        <!-- NOVO: MODAL/SEÇÃO DA AGENDA MENSAL -->
+        <section id="secao-agenda-mensal" class="w-full bg-slate-900/90 border border-cyan-500/30 rounded-3xl p-4 mb-4 hidden flex-col gap-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <button id="btn-mes-anterior" class="text-slate-400 hover:text-white px-2">◀</button>
+                <h3 id="agenda-mes-ano" class="text-xs font-bold uppercase tracking-wider text-cyan-400">Mês Ano</h3>
+                <button id="btn-mes-proximo" class="text-slate-400 hover:text-white px-2">▶</button>
+            </div>
+
+            <!-- Dias da Semana Header -->
+            <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-500">
+                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+
+            <!-- Grid de Dias -->
+            <div id="grid-calendario" class="grid grid-cols-7 gap-1 text-center text-xs"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex justify-between items-center">
+                <span id="agenda-dia-selecionado" class="text-[10px] text-slate-400 font-bold">Dia selecionado: Hoje</span>
+                <button id="btn-fechar-agenda" class="text-[10px] text-rose-400 font-bold">Fechar Agenda</button>
+            </div>
+        </section>
+
+        <!-- CONTAINER DAS SEÇÕES REGULARES -->
         <div id="secoes-container" class="w-full flex flex-col gap-6">
 
-            <!-- NOVO: PAINEL GRÁFICO DE DESEMPENHO -->
+            <!-- DASHBOARD DE DESEMPENHO -->
             <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4">
                 <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">📊 Dashboard Semanal</h2>
                 <div class="grid grid-cols-2 gap-3 items-center">
@@ -78,28 +90,47 @@
                             <span id="txt-taxa-conclusao" class="text-sm font-black text-emerald-400">0%</span>
                         </div>
                         <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 text-center">
-                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Badges Desbloqueadas</span>
-                            <span id="txt-badges-qtd" class="text-sm font-black accent-color">🏆 0/4</span>
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Carga do Dia</span>
+                            <span id="txt-carga-dia" class="text-xs font-bold text-amber-400">Leve 🟢</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- NOVO: TIMER POMODORO DEDICADO -->
-            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col items-center">
-                <div class="w-full flex justify-between items-center mb-2">
-                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">⏱️ Pomodoro de Foco</h2>
-                    <span id="pomodoro-modo" class="text-[9px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded-full uppercase">Foco (25m)</span>
+            <!-- COMPROMISSOS & INTEGRAÇÃO DIÁRIA EXPANDIDA -->
+            <section class="w-full flex flex-col gap-3">
+                <div class="flex justify-between items-center px-1">
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Compromissos do Dia</h2>
+                    <!-- Turnos -->
+                    <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
+                        <button onclick="filtrarTurno('todos')" id="turno-todos" class="px-2 py-0.5 text-[9px] font-bold rounded-md bg-slate-800 text-slate-200">Todos</button>
+                        <button onclick="filtrarTurno('manha')" id="turno-manha" class="px-2 py-0.5 text-[9px] font-bold rounded-md text-slate-500">🌅 Manhã</button>
+                        <button onclick="filtrarTurno('tarde')" id="turno-tarde" class="px-2 py-0.5 text-[9px] font-bold rounded-md text-slate-500">☀️ Tarde</button>
+                        <button onclick="filtrarTurno('noite')" id="turno-noite" class="px-2 py-0.5 text-[9px] font-bold rounded-md text-slate-500">🌙 Noite</button>
+                    </div>
                 </div>
-                <div id="pomo-clock" class="text-4xl font-black font-mono accent-color my-1">25:00</div>
-                <div class="flex gap-2 mt-2">
-                    <button id="pomo-start" class="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-1.5 rounded-xl transition-colors">▶️ Iniciar</button>
-                    <button id="pomo-pause" class="text-xs bg-slate-800 text-slate-300 font-bold px-3 py-1.5 rounded-xl border border-slate-700">⏸️ Pausar</button>
-                    <button id="pomo-reset" class="text-xs bg-slate-800 text-slate-400 font-bold px-3 py-1.5 rounded-xl border border-slate-700">🔄</button>
-                </div>
+
+                <div id="lista-compromissos" class="flex flex-col gap-2"></div>
+
+                <!-- Formulário com Data Integrada -->
+                <form id="form-compromisso" class="flex flex-col gap-2 bg-slate-900 p-3 rounded-2xl border border-slate-800">
+                    <div class="flex gap-2">
+                        <input id="input-titulo" type="text" placeholder="Novo compromisso ou tarefa..." required class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"/>
+                        <input id="input-hora" type="time" required class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
+                    </div>
+                    <div class="flex justify-between items-center gap-2">
+                        <input id="input-data" type="date" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
+                        <select id="select-prioridade" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-400">
+                            <option value="baixa">Baixa 🟢</option>
+                            <option value="media" selected>Média 🟡</option>
+                            <option value="alta">Alta 🔴</option>
+                        </select>
+                        <button type="submit" class="bg-accent text-slate-950 font-bold text-xs px-3 py-1 rounded-lg">+ Agendar</button>
+                    </div>
+                </form>
             </section>
 
-            <!-- SEÇÃO 1: HIDRATAÇÃO + GRÁFICO -->
+            <!-- HIDRATAÇÃO -->
             <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl">
                 <div class="w-full flex justify-between items-center">
                     <div class="flex items-center gap-2">
@@ -109,9 +140,9 @@
                     <button id="btn-reset-agua" class="text-[10px] uppercase font-bold text-slate-500 hover:text-rose-400">Resetar</button>
                 </div>
                 
-                <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 active:scale-95 transition-all">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 p-1 active:scale-95 transition-all cursor-pointer" onclick="adicionarAguaRapida(250)">
                     <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center">
-                        <span class="text-xl">💧</span>
+                        <span class="text-lg">💧</span>
                         <span id="texto-agua-progresso" class="text-sm font-black text-white">0%</span>
                     </div>
                 </div>
@@ -122,76 +153,17 @@
                     <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="300">+300ml</button>
                     <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="500">+500ml</button>
                 </div>
-
-                <!-- Gráfico Semanal Chart.js -->
-                <div class="w-full border-t border-slate-800/60 pt-3">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Histórico Semanal (ml)</p>
-                    <div class="h-24 w-full">
-                        <canvas id="chartAgua"></canvas>
-                    </div>
-                </div>
             </section>
 
-            <!-- HOBBIES -->
-            <section class="w-full flex flex-col gap-3">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 px-1">Hobbies & Pausas</h2>
-                <div class="grid grid-cols-3 gap-2">
-                    <div onclick="iniciarTimerHobby('Leitura de Foco', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
-                        <span class="text-2xl">📚</span>
-                        <p class="text-[11px] font-bold text-slate-200">Ler Livro</p>
-                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
-                    </div>
-                    <div onclick="iniciarTimerHobby('Desenho / Arte', 15)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
-                        <span class="text-2xl">🎨</span>
-                        <p class="text-[11px] font-bold text-slate-200">Desenhar</p>
-                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">15 min</span>
-                    </div>
-                    <div onclick="iniciarTimerHobby('Videogame / Pause', 20)" class="bg-slate-900/40 border border-slate-800/60 p-3 rounded-2xl flex flex-col items-center text-center gap-1 hover:border-slate-700 cursor-pointer">
-                        <span class="text-2xl">🎮</span>
-                        <p class="text-[11px] font-bold text-slate-200">Videogame</p>
-                        <span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900 px-1.5 py-0.5 rounded-full">20 min</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- COMPROMISSOS -->
-            <section class="w-full flex flex-col gap-3">
-                <div class="flex justify-between items-center px-1">
-                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Compromissos</h2>
-                    <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-800">
-                        <button onclick="mudarAbaCompromisso('hoje')" id="tab-hoje" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200">Hoje</button>
-                        <button onclick="mudarAbaCompromisso('amanha')" id="tab-amanha" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Amanhã</button>
-                        <button onclick="mudarAbaCompromisso('semana')" id="tab-semana" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500">Semana</button>
-                    </div>
-                </div>
-
-                <div id="lista-compromissos" class="flex flex-col gap-2"></div>
-
-                <form id="form-compromisso" class="flex flex-col gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                    <div class="flex gap-2">
-                        <input id="input-titulo" type="text" placeholder="Novo compromisso..." required class="bg-transparent text-sm px-2 focus:outline-none flex-1 text-slate-200 placeholder:text-slate-600"/>
-                        <input id="input-hora" type="time" required class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2 py-1 text-slate-300 focus:outline-none"/>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <select id="select-prioridade" class="bg-slate-950 border border-slate-800 text-[11px] rounded-lg px-2 py-1 text-slate-400">
-                            <option value="baixa">Baixa 🟢</option>
-                            <option value="media" selected>Média 🟡</option>
-                            <option value="alta">Alta 🔴</option>
-                        </select>
-                        <button type="submit" class="bg-accent text-slate-950 font-bold text-xs px-4 py-1 rounded-lg">+ Adicionar</button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- NOVO: FINANÇAS RÁPIDAS -->
+            <!-- FINANÇAS RÁPIDAS -->
             <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">💸 Controle Financeiro Diário</h2>
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">💸 Gastos de Hoje</h2>
                     <span id="total-gastos-txt" class="text-xs font-black text-rose-400">R$ 0,00</span>
                 </div>
                 <div id="lista-gastos" class="flex flex-col gap-1.5 max-h-28 overflow-y-auto"></div>
                 <form id="form-gasto" class="flex gap-2">
-                    <input id="input-gasto-desc" type="text" placeholder="Ex: Café, Almoço..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
+                    <input id="input-gasto-desc" type="text" placeholder="Ex: Almoço, Uber..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
                     <input id="input-gasto-valor" type="number" step="0.01" placeholder="R$" required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-2 py-1.5 w-20 text-slate-200 focus:outline-none"/>
                     <button type="submit" class="bg-rose-950 border border-rose-800 text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl">+</button>
                 </form>
@@ -199,7 +171,7 @@
 
             <!-- SUPLEMENTOS -->
             <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Vitaminas</h2>
+                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Remédios</h2>
                 <div id="lista-suplementos" class="flex flex-col gap-2 mb-3"></div>
                 <form id="form-suplemento" class="flex gap-2">
                     <input id="input-suplemento" type="text" placeholder="Ex: Creatina (5g)..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
@@ -207,152 +179,47 @@
                 </form>
             </section>
 
-            <!-- SAÚDE FÍSICA -->
-            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">🏃 Atividades Físicas & Peso</h2>
-                <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                    <div>
-                        <span class="text-xs text-slate-200 font-bold block">Exercício Diário</span>
-                        <span id="tempo-exercicio" class="text-[10px] text-slate-400">0 min praticados</span>
-                    </div>
-                    <button onclick="adicionarExercicio(15)" class="text-xs bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-bold">+15 min</button>
-                </div>
-                <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                    <div>
-                        <span class="text-xs text-slate-200 font-bold block">Registro de Peso</span>
-                        <span id="peso-atual-txt" class="text-[10px] text-slate-400">Peso atual: 70 kg</span>
-                    </div>
-                    <button onclick="registrarNovoPeso()" class="text-xs bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg font-bold">Atualizar</button>
-                </div>
-            </section>
-
-            <!-- BIBLIOTECA -->
-            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col gap-3">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">📚 Biblioteca & Leitura</h2>
-                <div id="card-livro-ativo" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2"></div>
-                <form id="form-livro" class="flex flex-col gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Adicionar Livro</span>
-                    <div class="flex gap-2">
-                        <input id="input-livro-titulo" type="text" placeholder="Título..." required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 flex-1 text-slate-200 focus:outline-none"/>
-                        <input id="input-livro-total" type="number" placeholder="Páginas" required class="bg-slate-900 border border-slate-800 text-xs rounded-lg px-2 py-1 w-20 text-slate-200 focus:outline-none"/>
-                        <button type="submit" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded-lg border border-slate-700">+</button>
-                    </div>
-                </form>
-                <div class="mt-1">
-                    <span class="text-[10px] font-bold text-slate-500 uppercase block mb-2">Seus Livros</span>
-                    <div id="lista-biblioteca" class="flex flex-col gap-2 max-h-36 overflow-y-auto pr-1"></div>
-                </div>
-            </section>
-
-            <!-- GRATIDÃO -->
-            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 mb-4">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-2">✨ Gratidão do Dia</h2>
-                <div class="flex flex-col gap-2">
-                    <input id="gratidao-1" type="text" placeholder="1. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
-                    <input id="gratidao-2" type="text" placeholder="2. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
-                    <input id="gratidao-3" type="text" placeholder="3. Sou grato por..." class="input-gratidao bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none"/>
-                </div>
-            </section>
-
         </div>
 
-        <!-- RODAPÉ -->
         <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full flex justify-between items-center mt-6">
-            <span>Hub Pro v4.0</span>
+            <span>Hub Pro v5.0</span>
             <div class="flex gap-2">
-                <button id="btn-exportar" class="hover:text-slate-400">Exportar Backup</button>
+                <button id="btn-exportar" class="hover:text-slate-400">Backup</button>
                 <span>•</span>
-                <button id="btn-importar" class="hover:text-slate-400">Importar</button>
+                <button id="btn-importar" class="hover:text-slate-400">Restaurar</button>
             </div>
         </footer>
 
     </div>
 
-    <!-- MODAIS -->
-    <div id="modal-timer" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
-        <h3 id="timer-titulo" class="text-xl font-bold text-slate-200 mb-2">Timer</h3>
-        <div id="timer-display" class="text-6xl font-black accent-color font-mono my-6">15:00</div>
-        <button id="btn-fechar-timer" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2 rounded-xl text-sm">Encerrar / Sair</button>
-    </div>
-
-    <div id="modal-respiracao" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-6 z-50">
-        <h3 class="text-lg font-bold text-slate-200 mb-8">Respiração Guiada (Box Breathing)</h3>
-        <div class="w-40 h-40 rounded-full border-4 border-cyan-400 flex items-center justify-center breathe-animation mb-8">
-            <span class="text-xs font-bold text-cyan-300 uppercase tracking-widest">Inspire / Expire</span>
-        </div>
-        <button id="btn-fechar-respiracao" class="bg-slate-800 text-slate-300 font-bold px-6 py-2 rounded-xl text-sm">Fechar</button>
-    </div>
-
     <!-- SCRIPT PRINCIPAL -->
     <script>
-        // --- INSTÂNCIAS DE GRÁFICOS (CHART.JS) ---
-        let chartAguaInstance = null;
         let chartGeralInstance = null;
+        let filtroTurnoAtual = 'todos';
+        let dataCalendarioAtual = new Date();
+        let diaSelecionadoAgenda = new Date().toISOString().split('T')[0];
 
-        // --- SOM DE CLIQUE ---
-        function tocarSomClique() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                gain.gain.setValueAtTime(0.04, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.04);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.04);
-            } catch(e) {}
-        }
-
-        document.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' || (e.target.tagName === 'INPUT' && e.target.type === 'checkbox')) {
-                tocarSomClique();
-            }
-        });
-
-        // --- ESTADO INICIAL ---
-        const FRASES = [
-            '"A clareza precede a maestria."',
-            '"Pequenas disciplinas diárias geram grandes conquistas."',
-            '"O foco é dizer não a centenas de boas ideias."',
-            '"Crie hábitos e seus hábitos criarão você."'
-        ];
-
-        let abaAtual = 'hoje';
-        let modoFoco = false;
-
-        let appData = JSON.parse(localStorage.getItem('hub_rotina_v4_db')) || {
+        // Carregar ou inicializar dados
+        let appData = JSON.parse(localStorage.getItem('hub_rotina_v5_db')) || {
             tema: 'theme-cyan',
-            peso: 70,
-            metaAgua: 2450,
+            metaAgua: 2500,
             aguaAtual: 0,
             xp: 0,
             nivel: 1,
-            streak: 0,
-            historicoAgua: [1200, 1500, 2000, 1800, 2100, 1900, 0],
-            suplementos: [
-                { id: 1, nome: "Creatina (5g)", tomado: false },
-                { id: 2, nome: "Multivitamínico", tomado: false }
-            ],
-            exercicioMinutos: 0,
-            livros: [
-                { id: 1, titulo: "O Poder do Hábito", paginasLidas: 120, paginasTotal: 300, ativo: true },
-                { id: 2, titulo: "Essencialismo", paginasLidas: 210, paginasTotal: 210, ativo: false }
-            ],
-            gastos: [
-                { id: 1, desc: "Café", valor: 4.50 }
-            ],
-            gratidao: ["", "", ""],
+            streak: 1,
+            suplementos: [{ id: 1, nome: "Creatina", tomado: false }],
+            gastos: [],
             compromissos: [
-                { id: 1, titulo: "Tomar Vitaminas", hora: "08:30", prioridade: "alta", aba: "hoje", concluido: false },
-                { id: 2, titulo: "Treino / Caminhada", hora: "18:00", prioridade: "media", aba: "hoje", concluido: false }
+                { id: 1, titulo: "Reunião de Alinhamento", hora: "09:00", data: new Date().toISOString().split('T')[0], prioridade: "alta", concluido: false },
+                { id: 2, titulo: "Treino na Academia", hora: "18:30", data: new Date().toISOString().split('T')[0], prioridade: "media", concluido: false }
             ]
         };
 
+        // Definir data de hoje no formulário
+        document.getElementById('input-data').value = diaSelecionadoAgenda;
+
         function salvarDados() {
-            localStorage.setItem('hub_rotina_v4_db', JSON.stringify(appData));
+            localStorage.setItem('hub_rotina_v5_db', JSON.stringify(appData));
             renderizarTudo();
         }
 
@@ -362,38 +229,123 @@
                 appData.nivel += 1;
                 appData.xp -= 100;
             }
-            if (navigator.vibrate) navigator.vibrate(50);
             salvarDados();
         }
 
-        // --- RENDERIZAÇÃO E DASHBOARDS ---
-        function renderizarTudo() {
-            document.getElementById('app-body').className = `bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-cyan-500 selection:text-slate-900 ${appData.tema || 'theme-cyan'}`;
+        // --- CALENDÁRIO MENSAL ---
+        function renderizarCalendario() {
+            const grid = document.getElementById('grid-calendario');
+            grid.innerHTML = '';
 
+            const ano = dataCalendarioAtual.getFullYear();
+            const mes = dataCalendarioAtual.getMonth();
+
+            const nomesMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('agenda-mes-ano').textContent = `${nomesMeses[mes]} ${ano}`;
+
+            const primeiroDiaMes = new Date(ano, mes, 1).getDay();
+            const totalDiasMes = new Date(ano, mes + 1, 0).getDate();
+
+            // Espaços em branco antes do 1º dia
+            for (let i = 0; i < primeiroDiaMes; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Dias do mês
+            for (let dia = 1; dia <= totalDiasMes; dia++) {
+                const diaStr = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                const temCompromisso = appData.compromissos.some(c => c.data === diaStr);
+                
+                const btnDia = document.createElement('button');
+                btnDia.className = `h-9 flex flex-col items-center justify-center rounded-xl border relative transition-all ${
+                    diaStr === diaSelecionadoAgenda ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold' : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700'
+                }`;
+                btnDia.innerHTML = `
+                    <span>${dia}</span>
+                    ${temCompromisso ? '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 absolute bottom-1"></span>' : ''}
+                `;
+
+                btnDia.onclick = () => {
+                    diaSelecionadoAgenda = diaStr;
+                    document.getElementById('input-data').value = diaStr;
+                    document.getElementById('agenda-dia-selecionado').textContent = `Dia selecionado: ${dia}/${mes+1}/${ano}`;
+                    renderizarTudo();
+                };
+
+                grid.appendChild(btnDia);
+            }
+        }
+
+        document.getElementById('btn-toggle-agenda').addEventListener('click', () => {
+            const sec = document.getElementById('secao-agenda-mensal');
+            sec.classList.toggle('hidden');
+            sec.classList.toggle('flex');
+            renderizarCalendario();
+        });
+
+        document.getElementById('btn-fechar-agenda').addEventListener('click', () => {
+            document.getElementById('secao-agenda-mensal').classList.add('hidden');
+        });
+
+        document.getElementById('btn-mes-anterior').addEventListener('click', () => {
+            dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() - 1);
+            renderizarCalendario();
+        });
+
+        document.getElementById('btn-mes-proximo').addEventListener('click', () => {
+            dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() + 1);
+            renderizarCalendario();
+        });
+
+        // --- FILTRO POR TURNO DA TAREFA ---
+        function obterTurno(hora) {
+            const h = parseInt(hora.split(':')[0]);
+            if (h >= 5 && h < 12) return 'manha';
+            if (h >= 12 && h < 18) return 'tarde';
+            return 'noite';
+        }
+
+        function filtrarTurno(turno) {
+            filtroTurnoAtual = turno;
+            ['todos', 'manha', 'tarde', 'noite'].forEach(t => {
+                document.getElementById(`turno-${t}`).className = (t === turno)
+                    ? "px-2 py-0.5 text-[9px] font-bold rounded-md bg-slate-800 text-slate-200"
+                    : "px-2 py-0.5 text-[9px] font-bold rounded-md text-slate-500";
+            });
+            renderizarTudo();
+        }
+
+        // --- RENDERIZAÇÃO GERAL ---
+        function renderizarTudo() {
             document.getElementById('streak-tag').textContent = `🔥 ${appData.streak} dias`;
             document.getElementById('user-level').textContent = `Nível ${appData.nivel}`;
             document.getElementById('user-xp').textContent = `${appData.xp} / 100 XP`;
 
             // Água
-            const porcentagem = Math.min(Math.round((appData.aguaAtual / appData.metaAgua) * 100), 100);
-            document.getElementById('texto-agua-progresso').textContent = `${porcentagem}%`;
+            const pctAgua = Math.min(Math.round((appData.aguaAtual / appData.metaAgua) * 100), 100);
+            document.getElementById('texto-agua-progresso').textContent = `${pctAgua}%`;
 
-            // Compromissos
+            // Compromissos do dia selecionado
             const listaComp = document.getElementById('lista-compromissos');
             listaComp.innerHTML = '';
-            const filtrados = appData.compromissos.filter(c => (c.aba || 'hoje') === abaAtual);
 
-            if (filtrados.length === 0) {
-                listaComp.innerHTML = `<p class="text-center text-[11px] text-slate-600 py-2">Nenhum compromisso nesta aba.</p>`;
+            let compDia = appData.compromissos.filter(c => c.data === diaSelecionadoAgenda);
+
+            if (filtroTurnoAtual !== 'todos') {
+                compDia = compDia.filter(c => obterTurno(c.hora) === filtroTurnoAtual);
+            }
+
+            if (compDia.length === 0) {
+                listaComp.innerHTML = `<p class="text-center text-[11px] text-slate-600 py-3 bg-slate-900/30 rounded-2xl border border-slate-900">Nenhum compromisso para este filtro/dia.</p>`;
             } else {
-                filtrados.forEach(comp => {
+                compDia.forEach(comp => {
                     const card = document.createElement('div');
-                    const badgeCor = comp.prioridade === 'alta' ? 'border-rose-500/50' : comp.prioridade === 'media' ? 'border-amber-500/50' : 'border-emerald-500/50';
-                    card.className = `p-3 rounded-xl flex justify-between items-center border bg-slate-900/60 ${badgeCor} ${comp.concluido ? 'opacity-40 line-through' : ''}`;
+                    const badgeCor = comp.prioridade === 'alta' ? 'border-rose-500/40 bg-rose-950/20' : comp.prioridade === 'media' ? 'border-amber-500/40 bg-amber-950/20' : 'border-emerald-500/40 bg-emerald-950/20';
+                    card.className = `p-3 rounded-2xl flex justify-between items-center border ${badgeCor} ${comp.concluido ? 'opacity-40 line-through' : ''}`;
                     card.innerHTML = `
                         <div class="flex flex-col gap-0.5 cursor-pointer flex-1" onclick="alternarCompromisso(${comp.id})">
-                            <p class="font-semibold text-xs text-slate-200">${comp.titulo}</p>
-                            <p class="text-[10px] text-slate-400">⏱️ ${comp.hora}</p>
+                            <p class="font-bold text-xs text-slate-200">${comp.titulo}</p>
+                            <p class="text-[10px] text-slate-400">⏱️ ${comp.hora} • ${obterTurno(comp.hora).toUpperCase()}</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="deletarCompromisso(${comp.id})" class="text-xs text-slate-600 hover:text-rose-400 p-1">✕</button>
@@ -404,7 +356,7 @@
                 });
             }
 
-            // Finanças
+            // Gastos
             const listaGastos = document.getElementById('lista-gastos');
             listaGastos.innerHTML = '';
             let totalGasto = 0;
@@ -439,96 +391,23 @@
                 listaSup.appendChild(item);
             });
 
-            // Exercícios & Peso
-            document.getElementById('tempo-exercicio').textContent = `${appData.exercicioMinutos} min praticados hoje`;
-            document.getElementById('peso-atual-txt').textContent = `Peso atual: ${appData.peso} kg`;
-
-            // Biblioteca
-            const livroAtivo = appData.livros.find(l => l.ativo) || appData.livros[0];
-            const cardAtivo = document.getElementById('card-livro-ativo');
-            if (livroAtivo) {
-                const pct = Math.min(Math.round((livroAtivo.paginasLidas / livroAtivo.paginasTotal) * 100), 100);
-                const concluido = pct >= 100;
-                cardAtivo.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-wider block">Lendo Agora</span>
-                            <h4 class="text-xs font-bold text-slate-100">${livroAtivo.titulo}</h4>
-                        </div>
-                        <span class="text-[10px] font-bold ${concluido ? 'text-emerald-400 bg-emerald-950/50 border border-emerald-800' : 'text-cyan-400'} px-2 py-0.5 rounded-full">
-                            ${concluido ? '✓ Concluído' : `${livroAtivo.paginasLidas}/${livroAtivo.paginasTotal} pág (${pct}%)`}
-                        </span>
-                    </div>
-                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden my-1">
-                        <div class="bg-cyan-400 h-full" style="width: ${pct}%"></div>
-                    </div>
-                    <div class="flex gap-2 mt-1">
-                        <button onclick="avancarPaginas(${livroAtivo.id}, 10)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg">+10 pág</button>
-                        <button onclick="avancarPaginas(${livroAtivo.id}, 25)" class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-lg">+25 pág</button>
-                    </div>
-                `;
-            } else {
-                cardAtivo.innerHTML = `<p class="text-center text-xs text-slate-500 py-2">Nenhum livro cadastrado.</p>`;
-            }
-
-            const listaBib = document.getElementById('lista-biblioteca');
-            listaBib.innerHTML = '';
-            appData.livros.forEach(livro => {
-                const pct = Math.min(Math.round((livro.paginasLidas / livro.paginasTotal) * 100), 100);
-                const item = document.createElement('div');
-                item.className = `p-2 rounded-xl border text-xs flex justify-between items-center ${livro.ativo ? 'bg-slate-900 border-cyan-500/40' : 'bg-slate-950 border-slate-800'}`;
-                item.innerHTML = `
-                    <div class="flex flex-col cursor-pointer flex-1" onclick="definirLivroAtivo(${livro.id})">
-                        <span class="font-bold text-slate-200">${livro.titulo}</span>
-                        <span class="text-[9px] text-slate-400">${livro.paginasLidas}/${livro.paginasTotal} pág (${pct}%)</span>
-                    </div>
-                    <button onclick="deletarLivro(${livro.id})" class="text-slate-600 hover:text-rose-400 text-xs">✕</button>
-                `;
-                listaBib.appendChild(item);
-            });
-
-            // Gratidão
-            document.getElementById('gratidao-1').value = appData.gratidao[0] || '';
-            document.getElementById('gratidao-2').value = appData.gratidao[1] || '';
-            document.getElementById('gratidao-3').value = appData.gratidao[2] || '';
-
-            // Renderizar Gráficos
             renderizarGraficos();
+            renderizarCalendario();
         }
 
-        // --- GRÁFICOS COM CHART.JS ---
         function renderizarGraficos() {
-            // 1. Gráfico de Água
-            const ctxAgua = document.getElementById('chartAgua').getContext('2d');
-            if (chartAguaInstance) chartAguaInstance.destroy();
-            
-            const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-            chartAguaInstance = new Chart(ctxAgua, {
-                type: 'bar',
-                data: {
-                    labels: dias,
-                    datasets: [{
-                        data: appData.historicoAgua,
-                        backgroundColor: '#06b6d4',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
-                        y: { display: false }
-                    }
-                }
-            });
+            const compDia = appData.compromissos.filter(c => c.data === diaSelecionadoAgenda);
+            const total = compDia.length || 1;
+            const concluidos = compDia.filter(c => c.concluido).length;
+            const pct = Math.round((concluidos / total) * 100);
 
-            // 2. Gráfico Donut de Taxa de Conclusão
-            const totalComp = appData.compromissos.length || 1;
-            const compDone = appData.compromissos.filter(c => c.concluido).length;
-            const taxa = Math.round((compDone / totalComp) * 100);
-            document.getElementById('txt-taxa-conclusao').textContent = `${taxa}%`;
+            document.getElementById('txt-taxa-conclusao').textContent = `${pct}%`;
+            
+            // Indicador de carga
+            const cargaTxt = document.getElementById('txt-carga-dia');
+            if (compDia.length > 5) cargaTxt.textContent = "Alta 🔴";
+            else if (compDia.length >= 3) cargaTxt.textContent = "Média 🟡";
+            else cargaTxt.textContent = "Leve 🟢";
 
             const ctxGeral = document.getElementById('chartGeral').getContext('2d');
             if (chartGeralInstance) chartGeralInstance.destroy();
@@ -538,7 +417,7 @@
                 data: {
                     labels: ['Concluído', 'Pendente'],
                     datasets: [{
-                        data: [compDone, totalComp - compDone],
+                        data: [concluidos, total - concluidos],
                         backgroundColor: ['#10b981', '#1e293b'],
                         borderWidth: 0
                     }]
@@ -552,114 +431,18 @@
             });
         }
 
-        // --- MODO FOCO ---
-        document.getElementById('btn-toggle-foco').addEventListener('click', () => {
-            modoFoco = !modoFoco;
-            const cont = document.getElementById('secoes-container');
-            const btn = document.getElementById('btn-toggle-foco');
-            
-            if (modoFoco) {
-                cont.classList.add('hidden');
-                btn.textContent = "☀️ Sair do Foco";
-                btn.className = "text-[10px] font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-1 rounded-xl";
-            } else {
-                cont.classList.remove('hidden');
-                btn.textContent = "🌙 Foco";
-                btn.className = "text-[10px] font-bold text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-1 rounded-xl";
-            }
-        });
-
-        // --- POMODORO ---
-        let pomoInterval;
-        let pomoTime = 25 * 60;
-        let pomoRunning = false;
-
-        document.getElementById('pomo-start').addEventListener('click', () => {
-            if (pomoRunning) return;
-            pomoRunning = true;
-            pomoInterval = setInterval(() => {
-                pomoTime--;
-                const m = String(Math.floor(pomoTime / 60)).padStart(2, '0');
-                const s = String(pomoTime % 60).padStart(2, '0');
-                document.getElementById('pomo-clock').textContent = `${m}:${s}`;
-
-                if (pomoTime <= 0) {
-                    clearInterval(pomoInterval);
-                    alert("Sessão Pomodoro Concluída! Hora de uma pausa.");
-                    adicionarXP(25);
-                    pomoTime = 25 * 60;
-                    pomoRunning = false;
-                }
-            }, 1000);
-        });
-
-        document.getElementById('pomo-pause').addEventListener('click', () => {
-            clearInterval(pomoInterval);
-            pomoRunning = false;
-        });
-
-        document.getElementById('pomo-reset').addEventListener('click', () => {
-            clearInterval(pomoInterval);
-            pomoRunning = false;
-            pomoTime = 25 * 60;
-            document.getElementById('pomo-clock').textContent = "25:00";
-        });
-
-        // --- FINANÇAS ---
-        document.getElementById('form-gasto').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const desc = document.getElementById('input-gasto-desc').value;
-            const valor = parseFloat(document.getElementById('input-gasto-valor').value);
-            
-            if (!appData.gastos) appData.gastos = [];
-            appData.gastos.push({ id: Date.now(), desc, valor });
-            document.getElementById('input-gasto-desc').value = '';
-            document.getElementById('input-gasto-valor').value = '';
-            salvarDados();
-        });
-
-        function deletarGasto(id) {
-            appData.gastos = appData.gastos.filter(g => g.id !== id);
-            salvarDados();
-        }
-
-        // --- OUTRAS AÇÕES ---
-        document.getElementById('frase-dia').addEventListener('click', () => {
-            const idx = Math.floor(Math.random() * FRASES.length);
-            document.getElementById('frase-dia').textContent = FRASES[idx] + ' 🔄';
-        });
-
-        document.querySelectorAll('.btn-add-agua-val').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                appData.aguaAtual += parseInt(e.target.getAttribute('data-ml'));
-                adicionarXP(10);
-            });
-        });
-
-        document.getElementById('btn-reset-agua').addEventListener('click', () => {
-            appData.aguaAtual = 0;
-            salvarDados();
-        });
-
-        function mudarAbaCompromisso(aba) {
-            abaAtual = aba;
-            ['hoje', 'amanha', 'semana'].forEach(a => {
-                document.getElementById(`tab-${a}`).className = (a === aba) 
-                    ? "px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-slate-800 text-slate-200" 
-                    : "px-2.5 py-0.5 text-[10px] font-bold rounded-md text-slate-500";
-            });
-            renderizarTudo();
-        }
-
+        // --- HANDLERS ---
         document.getElementById('form-compromisso').addEventListener('submit', (e) => {
             e.preventDefault();
             const titulo = document.getElementById('input-titulo').value;
             const hora = document.getElementById('input-hora').value;
+            const data = document.getElementById('input-data').value || diaSelecionadoAgenda;
             const prioridade = document.getElementById('select-prioridade').value;
 
-            appData.compromissos.push({ id: Date.now(), titulo, hora, prioridade, aba: abaAtual, concluido: false });
+            appData.compromissos.push({ id: Date.now(), titulo, hora, data, prioridade, concluido: false });
             appData.compromissos.sort((a, b) => a.hora.localeCompare(b.hora));
             salvarDados();
+            document.getElementById('input-titulo').value = '';
         });
 
         function alternarCompromisso(id) {
@@ -676,10 +459,43 @@
             salvarDados();
         }
 
+        function adicionarAguaRapida(ml) {
+            appData.aguaAtual += ml;
+            adicionarXP(10);
+        }
+
+        document.querySelectorAll('.btn-add-agua-val').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                appData.aguaAtual += parseInt(e.target.getAttribute('data-ml'));
+                adicionarXP(10);
+            });
+        });
+
+        document.getElementById('btn-reset-agua').addEventListener('click', () => {
+            appData.aguaAtual = 0;
+            salvarDados();
+        });
+
+        document.getElementById('form-gasto').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const desc = document.getElementById('input-gasto-desc').value;
+            const valor = parseFloat(document.getElementById('input-gasto-valor').value);
+            appData.gastos.push({ id: Date.now(), desc, valor });
+            document.getElementById('input-gasto-desc').value = '';
+            document.getElementById('input-gasto-valor').value = '';
+            salvarDados();
+        });
+
+        function deletarGasto(id) {
+            appData.gastos = appData.gastos.filter(g => g.id !== id);
+            salvarDados();
+        }
+
         document.getElementById('form-suplemento').addEventListener('submit', (e) => {
             e.preventDefault();
             const nome = document.getElementById('input-suplemento').value;
             appData.suplementos.push({ id: Date.now(), nome, tomado: false });
+            document.getElementById('input-suplemento').value = '';
             salvarDados();
         });
 
@@ -697,115 +513,8 @@
             salvarDados();
         }
 
-        function adicionarExercicio(min) {
-            appData.exercicioMinutos += min;
-            adicionarXP(20);
-        }
-
-        function registrarNovoPeso() {
-            const p = prompt("Novo peso (kg):", appData.peso);
-            if (p && !isNaN(p)) {
-                appData.peso = parseFloat(p);
-                appData.metaAgua = Math.round(appData.peso * 35);
-                salvarDados();
-            }
-        }
-
-        document.getElementById('form-livro').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const titulo = document.getElementById('input-livro-titulo').value.trim();
-            const paginasTotal = parseInt(document.getElementById('input-livro-total').value);
-
-            if (titulo && paginasTotal > 0) {
-                appData.livros.forEach(l => l.ativo = false);
-                appData.livros.push({ id: Date.now(), titulo, paginasLidas: 0, paginasTotal, ativo: true });
-                salvarDados();
-            }
-        });
-
-        function avancarPaginas(id, qtd) {
-            const livro = appData.livros.find(l => l.id === id);
-            if (livro) {
-                livro.paginasLidas = Math.min(livro.paginasLidas + qtd, livro.paginasTotal);
-                adicionarXP(15);
-            }
-        }
-
-        function definirLivroAtivo(id) {
-            appData.livros.forEach(l => l.ativo = (l.id === id));
-            salvarDados();
-        }
-
-        function deletarLivro(id) {
-            appData.livros = appData.livros.filter(l => l.id !== id);
-            salvarDados();
-        }
-
-        document.querySelectorAll('.input-gratidao').forEach((inp, idx) => {
-            inp.addEventListener('change', (e) => {
-                appData.gratidao[idx] = e.target.value;
-                salvarDados();
-            });
-        });
-
-        // Modais
-        document.getElementById('btn-open-breathing').addEventListener('click', () => {
-            document.getElementById('modal-respiracao').classList.remove('hidden');
-            document.getElementById('modal-respiracao').classList.add('flex');
-        });
-        document.getElementById('btn-fechar-respiracao').addEventListener('click', () => {
-            document.getElementById('modal-respiracao').classList.add('hidden');
-        });
-
-        let timerInterval;
-        function iniciarTimerHobby(nome, minutos) {
-            document.getElementById('timer-titulo').textContent = nome;
-            let tempoRestante = minutos * 60;
-            const modal = document.getElementById('modal-timer');
-            const display = document.getElementById('timer-display');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const m = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
-                const s = String(tempoRestante % 60).padStart(2, '0');
-                display.textContent = `${m}:${s}`;
-                
-                if (--tempoRestante < 0) {
-                    clearInterval(timerInterval);
-                    alert(`Concluído: ${nome}!`);
-                    adicionarXP(30);
-                    modal.classList.add('hidden');
-                }
-            }, 1000);
-        }
-
-        document.getElementById('btn-fechar-timer').addEventListener('click', () => {
-            clearInterval(timerInterval);
-            document.getElementById('modal-timer').classList.add('hidden');
-        });
-
-        document.getElementById('btn-exportar').addEventListener('click', () => {
-            const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `hub-rotina-backup.json`;
-            a.click();
-        });
-
-        document.getElementById('btn-importar').addEventListener('click', () => {
-            const jsonStr = prompt("Cole o código JSON do seu backup:");
-            if (jsonStr) {
-                try {
-                    appData = JSON.parse(jsonStr);
-                    salvarDados();
-                    alert("Dados importados com sucesso!");
-                } catch(err) {
-                    alert("JSON inválido.");
-                }
-            }
+        document.getElementById('btn-toggle-foco').addEventListener('click', () => {
+            document.getElementById('secoes-container').classList.toggle('hidden');
         });
 
         // Inicializar
