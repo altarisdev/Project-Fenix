@@ -63,7 +63,7 @@
             </div>
         </section>
 
-        <!-- MODAL/SEÇÃO DA AGENDA MENSAL (NOVO) -->
+        <!-- MODAL/SEÇÃO DA AGENDA MENSAL -->
         <section id="secao-agenda-mensal" class="w-full bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-4 mb-4 hidden flex-col gap-3 shadow-2xl">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <button id="btn-mes-anterior" class="text-slate-400 hover:text-white px-2">◀</button>
@@ -108,6 +108,50 @@
                 </div>
             </section>
 
+            <!-- FICHA DE TREINO INTERATIVA E ROTINA SEMANAL -->
+            <section class="w-full bg-slate-900/60 border border-emerald-500/30 rounded-3xl p-5 flex flex-col gap-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
+                    <div>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center gap-1.5">
+                            🏋️ Treino de Hipertrofia
+                        </h2>
+                        <span id="treino-foco-hoje" class="text-[10px] text-slate-400 font-medium block mt-0.5">Foco de Hoje: -</span>
+                    </div>
+                    <span class="text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-0.5 rounded-full">4x na semana</span>
+                </div>
+
+                <!-- Seletor dos Dias do Treino -->
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-[10px] font-bold text-center">
+                    <button onclick="selecionarDiaTreino('seg')" id="tab-treino-seg" class="py-1.5 rounded-xl transition-all">Seg<br><span class="text-[8px] font-normal opacity-75">Fight</span></button>
+                    <button onclick="selecionarDiaTreino('ter')" id="tab-treino-ter" class="py-1.5 rounded-xl transition-all">Ter<br><span class="text-[8px] font-normal opacity-75">Treino A</span></button>
+                    <button onclick="selecionarDiaTreino('qui')" id="tab-treino-qui" class="py-1.5 rounded-xl transition-all">Qui<br><span class="text-[8px] font-normal opacity-75">Treino B</span></button>
+                    <button onclick="selecionarDiaTreino('sab')" id="tab-treino-sab" class="py-1.5 rounded-xl transition-all">Sáb<br><span class="text-[8px] font-normal opacity-75">Treino C</span></button>
+                </div>
+
+                <!-- Lista de Exercícios do Dia Selecionado -->
+                <div id="container-exercicios-treino" class="flex flex-col gap-2.5">
+                    <!-- Gerado dinamicamente no JS -->
+                </div>
+            </section>
+
+            <!-- PLANO DE ALIMENTAÇÃO E GANHO DE MASSA -->
+            <section class="w-full bg-slate-900/60 border border-amber-500/30 rounded-3xl p-5 flex flex-col gap-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
+                    <div>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center gap-1.5">
+                            🥗 Alimentação & Hipertrofia
+                        </h2>
+                        <span class="text-[10px] text-slate-400 block mt-0.5">Estratégia para Ganho de Peso (50kg)</span>
+                    </div>
+                    <span id="status-refeicoes-txt" class="text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800/60 px-2 py-0.5 rounded-full">0/5 Concluídas</span>
+                </div>
+
+                <!-- Lista de Refeições Diárias -->
+                <div id="lista-refeicoes-diarias" class="flex flex-col gap-2">
+                    <!-- Gerado dinamicamente no JS -->
+                </div>
+            </section>
+
             <!-- POMODORO -->
             <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 flex flex-col items-center">
                 <div class="w-full flex justify-between items-center mb-2">
@@ -126,7 +170,7 @@
             <section class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col items-center gap-4 shadow-xl">
                 <div class="w-full flex justify-between items-center">
                     <div class="flex items-center gap-2">
-                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Hidratação</h2>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">Hidratação (Meta: 2.5L - 3.0L)</h2>
                         <button id="btn-config-agua" class="text-[10px] accent-color hover:underline">⚙️ Meta</button>
                     </div>
                     <button id="btn-reset-agua" class="text-[10px] uppercase font-bold text-slate-500 hover:text-rose-400">Resetar</button>
@@ -136,14 +180,15 @@
                     <div class="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-center">
                         <span class="text-lg">💧</span>
                         <span id="texto-agua-progresso" class="text-sm font-black text-white">0%</span>
+                        <span id="texto-agua-ml" class="text-[9px] text-cyan-300 font-semibold">0 / 2500ml</span>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-4 gap-2 w-full">
                     <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="100">+100ml</button>
                     <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="250">+250ml</button>
-                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="300">+300ml</button>
                     <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="500">+500ml</button>
+                    <button class="btn-add-agua-val bg-slate-800 text-xs font-bold py-1.5 rounded-xl border border-slate-700/50 accent-color" data-ml="750">+750ml</button>
                 </div>
 
                 <!-- Gráfico Semanal Chart.js -->
@@ -224,12 +269,15 @@
                 </form>
             </section>
 
-            <!-- SUPLEMENTOS -->
-            <section class="w-full bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4">
-                <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400 mb-3">💊 Suplementos & Vitaminas</h2>
+            <!-- SUPLEMENTOS ATUALIZADOS -->
+            <section class="w-full bg-slate-900/40 border border-purple-500/30 rounded-2xl p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-purple-400">💊 Suplementação Diária (Massa Muscular)</h2>
+                    <span class="text-[9px] text-slate-500 uppercase font-bold">Hipertrofia</span>
+                </div>
                 <div id="lista-suplementos" class="flex flex-col gap-2 mb-3"></div>
                 <form id="form-suplemento" class="flex gap-2">
-                    <input id="input-suplemento" type="text" placeholder="Ex: Creatina (5g)..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
+                    <input id="input-suplemento" type="text" placeholder="Ex: Multivitamínico..." required class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-1.5 flex-1 text-slate-200 focus:outline-none"/>
                     <button type="submit" class="bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-700">+</button>
                 </form>
             </section>
@@ -239,7 +287,7 @@
                 <h2 class="text-xs font-bold tracking-wider uppercase text-slate-400">🏃 Atividades Físicas & Peso</h2>
                 <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                     <div>
-                        <span class="text-xs text-slate-200 font-bold block">Exercício Diário</span>
+                        <span class="text-xs text-slate-200 font-bold block">Exercício Extra</span>
                         <span id="tempo-exercicio" class="text-[10px] text-slate-400">0 min praticados</span>
                     </div>
                     <button onclick="adicionarExercicio(15)" class="text-xs bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-bold">+15 min</button>
@@ -247,7 +295,7 @@
                 <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                     <div>
                         <span class="text-xs text-slate-200 font-bold block">Registro de Peso</span>
-                        <span id="peso-atual-txt" class="text-[10px] text-slate-400">Peso atual: 70 kg</span>
+                        <span id="peso-atual-txt" class="text-[10px] text-slate-400">Peso atual: 50 kg</span>
                     </div>
                     <button onclick="registrarNovoPeso()" class="text-xs bg-slate-800 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg font-bold">Atualizar</button>
                 </div>
@@ -285,7 +333,7 @@
 
         <!-- RODAPÉ -->
         <footer class="text-center text-[10px] text-slate-600 font-medium tracking-wide border-t border-slate-900 pt-4 w-full flex justify-between items-center mt-6">
-            <span>Hub Pro v6.0</span>
+            <span>Hub Pro v6.5 (Fitness Edition)</span>
             <div class="flex gap-2">
                 <button id="btn-exportar" class="hover:text-slate-400">Exportar Backup</button>
                 <span>•</span>
@@ -319,6 +367,59 @@
         let filtroTurnoAtual = 'todos';
         let dataCalendarioAtual = new Date();
         let diaSelecionadoAgenda = new Date().toISOString().split('T')[0];
+        let diaTreinoSelecionado = 'ter'; // Padrao Terça-feira
+
+        // --- ESTRUTURA FIXA DE TREINOS E REFEIÇÕES ---
+        const PLANO_TREINOS = {
+            seg: {
+                titulo: "🥊 Segunda-feira: Muay Thai",
+                foco: "Cardio, Coordenação e Resistência",
+                exercicios: [
+                    { id: "e1", nome: "Treino de Muay Thai", series: "1 sessão (60 min)", carga: "" }
+                ]
+            },
+            ter: {
+                titulo: "🔥 Terça-feira: Treino A (Peito / Tríceps / Ombro)",
+                foco: "Empurrar (Superior)",
+                exercicios: [
+                    { id: "e2", nome: "Supino Reto c/ Barra ou Halter", series: "3 a 4 séries x 8-12 reps", carga: "10kg" },
+                    { id: "e3", nome: "Supino Inclinado c/ Halteres", series: "3 séries x 8-12 reps", carga: "8kg" },
+                    { id: "e4", nome: "Desenvolvimento de Ombro c/ Halter", series: "3 séries x 10-12 reps", carga: "6kg" },
+                    { id: "e5", nome: "Elevação Lateral de Ombro", series: "3 séries x 12-15 reps", carga: "4kg" },
+                    { id: "e6", nome: "Tríceps Pulley (Corda ou Barra)", series: "3 séries x 10-12 reps", carga: "15kg" }
+                ]
+            },
+            qui: {
+                titulo: "🦵 Quinta-feira: Treino B (Pernas Completas)",
+                foco: "Membros Inferiores",
+                exercicios: [
+                    { id: "e7", nome: "Agachamento (Livre ou Hack)", series: "3 a 4 séries x 8-12 reps", carga: "12kg" },
+                    { id: "e8", nome: "Leg Press 45°", series: "3 séries x 10-12 reps", carga: "40kg" },
+                    { id: "e9", nome: "Cadeira Extensora", series: "3 séries x 12-15 reps", carga: "20kg" },
+                    { id: "e10", nome: "Mesa / Cadeira Flexora", series: "3 séries x 10-12 reps", carga: "20kg" },
+                    { id: "e11", nome: "Gêmeos em Pé (Panturrilhas)", series: "4 séries x 15 reps", carga: "corpo" }
+                ]
+            },
+            sab: {
+                titulo: "💪 Sábado: Treino C (Costas / Bíceps / Ombro Post.)",
+                foco: "Puxar (Superior)",
+                exercicios: [
+                    { id: "e12", nome: "Puxada Frontal na Polia", series: "3 a 4 séries x 8-12 reps", carga: "25kg" },
+                    { id: "e13", nome: "Remada Curvada ou Máquina", series: "3 séries x 8-12 reps", carga: "15kg" },
+                    { id: "e14", nome: "Crucifixo Invertido (Ombro Post.)", series: "3 séries x 12-15 reps", carga: "4kg" },
+                    { id: "e15", nome: "Rosca Direta c/ Barra ou Halteres", series: "3 séries x 10-12 reps", carga: "6kg" },
+                    { id: "e16", nome: "Rosca Martelo", series: "3 séries x 10-12 reps", carga: "6kg" }
+                ]
+            }
+        };
+
+        const PLANO_REFEICOES = [
+            { id: "r1", nome: "Café da Manhã", desc: "Pão de fôrma (2 fatias) + 2 ovos mexidos + suco ou café c/ leite integral" },
+            { id: "r2", nome: "Almoço Anabólico", desc: "Arroz/Macarrão + Feijão + Carne/Frango + Salada c/ Fio de Azeite de Oliva" },
+            { id: "r3", nome: "Vitamina Hipercalórica (Pré-Treino)", desc: "300ml leite integral + 1 banana + 3 colh aveia + 2 colh pasta de amendoim" },
+            { id: "r4", nome: "Jantar Reforçado", desc: "Arroz/Macarrão + Peito de Frango/Carne ou Omelete com queijo e aveia" },
+            { id: "r5", nome: "Ceia / Pós-Nossa", desc: "Iogurte integral com granola OU 2 bananas amassadas com aveia e mel" }
+        ];
 
         // --- SOM DE CLIQUE ---
         function tocarSomClique() {
@@ -348,7 +449,8 @@
             '"A clareza precede a maestria."',
             '"Pequenas disciplinas diárias geram grandes conquistas."',
             '"O foco é dizer não a centenas de boas ideias."',
-            '"Crie hábitos e seus hábitos criarão você."'
+            '"Crie hábitos e seus hábitos criarão você."',
+            '"A constância supera o talento todos os dias."'
         ];
 
         let modoFoco = false;
@@ -356,30 +458,34 @@
         // --- CARREGAR / INICIALIZAR DADOS ---
         let appData = JSON.parse(localStorage.getItem('hub_rotina_v6_db')) || {
             tema: 'theme-cyan',
-            peso: 70,
-            metaAgua: 2450,
+            peso: 50,
+            metaAgua: 2500,
             aguaAtual: 0,
             xp: 0,
             nivel: 1,
             streak: 1,
-            historicoAgua: [1200, 1500, 2000, 1800, 2100, 1900, 0],
+            historicoAgua: [1800, 2100, 2500, 2000, 2400, 2200, 0],
             suplementos: [
-                { id: 1, nome: "Creatina (5g)", tomado: false },
-                { id: 2, nome: "Multivitamínico", tomado: false }
+                { id: 1, nome: "Creatina (3g a 5g)", tomado: false },
+                { id: 2, nome: "Hipercalórico / Shake", tomado: false },
+                { id: 3, nome: "Multivitamínico", tomado: false }
             ],
             exercicioMinutos: 0,
             livros: [
-                { id: 1, titulo: "O Poder do Hábito", paginasLidas: 120, paginasTotal: 300, ativo: true },
-                { id: 2, titulo: "Essencialismo", paginasLidas: 210, paginasTotal: 210, ativo: false }
+                { id: 1, titulo: "O Poder do Hábito", paginasLidas: 120, paginasTotal: 300, ativo: true }
             ],
             gastos: [
-                { id: 1, desc: "Café", valor: 4.50 }
+                { id: 1, desc: "Açaí / Shake", valor: 12.00 }
             ],
             gratidao: ["", "", ""],
             compromissos: [
-                { id: 1, titulo: "Tomar Vitaminas", hora: "08:30", data: new Date().toISOString().split('T')[0], prioridade: "alta", concluido: false },
-                { id: 2, titulo: "Treino / Caminhada", hora: "18:00", data: new Date().toISOString().split('T')[0], prioridade: "media", concluido: false }
-            ]
+                { id: 1, titulo: "Treino na Academia", hora: "17:00", data: new Date().toISOString().split('T')[0], prioridade: "alta", concluido: false },
+                { id: 2, titulo: "Tomar Creatina (5g)", hora: "09:00", data: new Date().toISOString().split('T')[0], prioridade: "alta", concluido: false }
+            ],
+            // Novos Registros Fitness
+            treinoCargas: {}, // Armazena cargas anotadas { ex_id: "12kg" }
+            treinoConcluidos: {}, // Armazena estado concluido { ex_id: true }
+            refeicoesConcluidas: {} // Armazena refeicoes feitas { r_id: true }
         };
 
         // Atribuir data atual para formulário
@@ -398,6 +504,100 @@
             }
             if (navigator.vibrate) navigator.vibrate(50);
             salvarDados();
+        }
+
+        // --- SELEÇÃO DE DIA DO TREINO ---
+        function selecionarDiaTreino(dia) {
+            diaTreinoSelecionado = dia;
+            renderizarTreinos();
+        }
+
+        function salvarCargaExercicio(id, valor) {
+            if (!appData.treinoCargas) appData.treinoCargas = {};
+            appData.treinoCargas[id] = valor;
+            salvarDados();
+        }
+
+        function alternarExercicioConcluido(id) {
+            if (!appData.treinoConcluidos) appData.treinoConcluidos = {};
+            appData.treinoConcluidos[id] = !appData.treinoConcluidos[id];
+            if (appData.treinoConcluidos[id]) adicionarXP(10);
+            else salvarDados();
+        }
+
+        function alternarRefeicaoConcluida(id) {
+            if (!appData.refeicoesConcluidas) appData.refeicoesConcluidas = {};
+            appData.refeicoesConcluidas[id] = !appData.refeicoesConcluidas[id];
+            if (appData.refeicoesConcluidas[id]) adicionarXP(10);
+            else salvarDados();
+        }
+
+        function renderizarTreinos() {
+            ['seg', 'ter', 'qui', 'sab'].forEach(d => {
+                const btn = document.getElementById(`tab-treino-${d}`);
+                if (btn) {
+                    btn.className = (d === diaTreinoSelecionado)
+                        ? "py-1.5 rounded-xl transition-all bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                        : "py-1.5 rounded-xl transition-all text-slate-400 hover:text-slate-200";
+                }
+            });
+
+            const treinoInfo = PLANO_TREINOS[diaTreinoSelecionado];
+            document.getElementById('treino-foco-hoje').textContent = `${treinoInfo.titulo} — ${treinoInfo.foco}`;
+
+            const container = document.getElementById('container-exercicios-treino');
+            container.innerHTML = '';
+
+            treinoInfo.exercicios.forEach(ex => {
+                const cargaSalva = (appData.treinoCargas && appData.treinoCargas[ex.id]) !== undefined ? appData.treinoCargas[ex.id] : ex.carga;
+                const estaConcluido = appData.treinoConcluidos && appData.treinoConcluidos[ex.id];
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-2xl border transition-all flex flex-col gap-2 ${estaConcluido ? 'bg-emerald-950/20 border-emerald-500/30 opacity-60' : 'bg-slate-950/80 border-slate-800'}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-start gap-2">
+                            <input type="checkbox" ${estaConcluido ? 'checked' : ''} onclick="alternarExercicioConcluido('${ex.id}')" class="mt-0.5 accent-emerald-500 w-4 h-4 cursor-pointer">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200 ${estaConcluido ? 'line-through text-slate-400' : ''}">${ex.nome}</h4>
+                                <span class="text-[10px] text-slate-400 font-medium">${ex.series}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-slate-800/80 pt-2 mt-1">
+                        <span class="text-[9px] text-slate-500 font-bold uppercase">Carga Utilizada:</span>
+                        <input type="text" value="${cargaSalva}" placeholder="Ex: 12kg" onchange="salvarCargaExercicio('${ex.id}', this.value)" class="bg-slate-900 border border-slate-800 text-[11px] text-emerald-400 font-bold px-2 py-0.5 rounded-lg w-20 text-right focus:outline-none focus:border-emerald-500"/>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderizarRefeicoes() {
+            const container = document.getElementById('lista-refeicoes-diarias');
+            container.innerHTML = '';
+
+            let concluidasCount = 0;
+
+            PLANO_REFEICOES.forEach(ref => {
+                const feita = appData.refeicoesConcluidas && appData.refeicoesConcluidas[ref.id];
+                if (feita) concluidasCount++;
+
+                const card = document.createElement('div');
+                card.className = `p-2.5 rounded-2xl border flex justify-between items-center transition-all ${feita ? 'bg-amber-950/20 border-amber-500/30 opacity-60' : 'bg-slate-950/80 border-slate-800'}`;
+                card.innerHTML = `
+                    <div class="flex items-start gap-2.5 flex-1 pr-2">
+                        <input type="checkbox" ${feita ? 'checked' : ''} onclick="alternarRefeicaoConcluida('${ref.id}')" class="mt-1 accent-amber-500 w-4 h-4 cursor-pointer">
+                        <div>
+                            <span class="text-xs font-bold text-amber-300 block ${feita ? 'line-through text-slate-500' : ''}">${ref.nome}</span>
+                            <p class="text-[10px] text-slate-400 leading-tight mt-0.5">${ref.desc}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('status-refeicoes-txt').textContent = `${concluidasCount}/${PLANO_REFEICOES.length} Concluídas`;
         }
 
         // --- CALENDÁRIO MENSAL ---
@@ -493,6 +693,11 @@
             // Água
             const porcentagem = Math.min(Math.round((appData.aguaAtual / appData.metaAgua) * 100), 100);
             document.getElementById('texto-agua-progresso').textContent = `${porcentagem}%`;
+            document.getElementById('texto-agua-ml').textContent = `${appData.aguaAtual} / ${appData.metaAgua}ml`;
+
+            // Renderizar Novas Seções Fitness
+            renderizarTreinos();
+            renderizarRefeicoes();
 
             // Compromissos do dia selecionado
             const listaComp = document.getElementById('lista-compromissos');
@@ -560,7 +765,7 @@
                 listaSup.appendChild(item);
             });
 
-            // Exercícios & Peso
+            // Exercício & Peso
             document.getElementById('tempo-exercicio').textContent = `${appData.exercicioMinutos} min praticados hoje`;
             document.getElementById('peso-atual-txt').textContent = `Peso atual: ${appData.peso} kg`;
 
@@ -845,7 +1050,7 @@
             const p = prompt("Novo peso (kg):", appData.peso);
             if (p && !isNaN(p)) {
                 appData.peso = parseFloat(p);
-                appData.metaAgua = Math.round(appData.peso * 35);
+                appData.metaAgua = Math.max(2500, Math.round(appData.peso * 35));
                 salvarDados();
             }
         }
